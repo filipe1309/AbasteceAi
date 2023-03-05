@@ -12,14 +12,16 @@ class FuelRepositoryImpl: FuelRepository {
                     id = 1,
                     name = "Gasolina",
                     price = 4.99,
-                    efficiency = 10.0
+                    efficiency = 10.0,
+                    efficiencyUnit = "km/l"
                 )
         } else {
             return Fuel(
                 id = 2,
                 name = "Etanol",
                 price = 3.99,
-                efficiency = 8.0
+                efficiency = 8.0,
+                efficiencyUnit = "km/l"
             )
         }
         // TODO: return FuelLocalDataSource.getFuel(fuel)
@@ -31,13 +33,15 @@ class FuelRepositoryImpl: FuelRepository {
                 id = 1,
                 name = "Gasolina",
                 price = 4.99,
-                efficiency = 10.0
+                efficiency = 10.0,
+                efficiencyUnit = "km/l"
             ),
             Fuel(
                 id = 2,
                 name = "Etanol",
                 price = 3.99,
-                efficiency = 8.0
+                efficiency = 8.0,
+                efficiencyUnit = "km/l"
             )
         ))
     }

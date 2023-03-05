@@ -4,5 +4,6 @@ data class Fuel(
     val id: Int,
     val name: String,
     var price: Double,
-    val efficiency: Double
+    val efficiency: Double,
+    val efficiencyUnit: String
 )
