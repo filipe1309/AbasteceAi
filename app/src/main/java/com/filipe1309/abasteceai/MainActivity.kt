@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.filipe1309.abasteceai.data.repository.FuelRepositoryImpl
 import com.filipe1309.abasteceai.databinding.ActivityMainBinding
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         val fuelRepository = FuelRepositoryImpl()
         val compareFuelsUseCase = CompareFuelsUseCase(fuelRepository)
         val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
@@ -66,8 +67,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 binding.spinnerSecondFuel.setSelection(2, false)
                 binding.secondFuelValue.setText(it[1].price.toString())
                 viewModel.secondFuel.value = it[1]
-
-                viewModel.compareFuels()
             }
             Log.i("MainActivity", "Fuels: $it")
         }
@@ -76,40 +75,17 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             Log.i("MainActivity", "First fuel: ${viewModel.firstFuel.value}, costPerUnitDistance: ${viewModel.firstFuel.value?.price?.div(viewModel.firstFuel.value?.efficiency!!)}")
             Log.i("MainActivity", "Second fuel: ${viewModel.secondFuel.value}, costPerUnitDistance: ${viewModel.secondFuel.value?.price?.div(viewModel.secondFuel.value?.efficiency!!)}")
             if (it.fuel == viewModel.firstFuel.value) {
-                binding.relativeLayoutFirstFuel.setBackgroundColor(getColor(android.R.color.holo_green_light))
-                binding.relativeLayoutSecondFuel.setBackgroundColor(getColor(android.R.color.holo_red_light))
+                binding.cardViewFirstFuel.setCardBackgroundColor(getColor(android.R.color.holo_green_light))
+                binding.cardViewSecondFuel.setCardBackgroundColor(getColor(android.R.color.holo_red_light))
             } else {
-                binding.relativeLayoutFirstFuel.setBackgroundColor(getColor(android.R.color.holo_red_light))
-                binding.relativeLayoutSecondFuel.setBackgroundColor(getColor(android.R.color.holo_green_light))
+                binding.cardViewFirstFuel.setCardBackgroundColor(getColor(android.R.color.holo_red_light))
+                binding.cardViewSecondFuel.setCardBackgroundColor(getColor(android.R.color.holo_green_light))
             }
             Toast.makeText(this, "The best fuel is ${it.fuel.name}, with a cost of ${it.costPerUnitDistance} per unit distance", Toast.LENGTH_LONG).show()
         }
 
-        binding.firstFuelValue.setOnFocusChangeListener { view, b ->
-            if (!b) {
-                val value = binding.firstFuelValue.text.toString().toDouble()
-                viewModel.setFirstFuelPrice(value)
-                viewModel.compareFuels()
-            }
-        }
-
-        binding.secondFuelValue.setOnFocusChangeListener { view, b ->
-            if (!b) {
-                val value = binding.secondFuelValue.text.toString().toDouble()
-                viewModel.setSecondFuelPrice(value)
-                viewModel.compareFuels()
-            }
-        }
-
-        viewModel.firstFuel.observe(this) {
-            binding.firstFuelValue.setText(it.price.toString())
-        }
-
-        viewModel.secondFuel.observe(this) {
-            binding.secondFuelValue.setText(it.price.toString())
-        }
-
-        setContentView(binding.root)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
 
     override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {

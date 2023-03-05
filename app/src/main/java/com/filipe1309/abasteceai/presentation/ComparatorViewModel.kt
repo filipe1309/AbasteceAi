@@ -15,17 +15,9 @@ class ComparatorViewModel(
     private val compareFuelsUseCase: CompareFuelsUseCase,
     private val getFuelsUseCase: GetFuelsUseCase
 ): ViewModel() {
-    var firstFuel: MutableLiveData<Fuel> = MutableLiveData()
-    var secondFuel: MutableLiveData<Fuel> = MutableLiveData()
-    var result: MutableLiveData<ComparisonResult> = MutableLiveData()
-
-    fun setFirstFuelPrice(price: Double) {
-        firstFuel.value?.price = price
-    }
-
-    fun setSecondFuelPrice(price: Double) {
-        secondFuel.value?.price = price
-    }
+    val firstFuel: MutableLiveData<Fuel> = MutableLiveData()
+    val secondFuel: MutableLiveData<Fuel> = MutableLiveData()
+    val result: MutableLiveData<ComparisonResult> = MutableLiveData()
 
     fun compareFuels() = viewModelScope.launch(Dispatchers.IO) {
         val comparisonResult = compareFuelsUseCase.invoke(firstFuel.value!!, secondFuel.value!!)
