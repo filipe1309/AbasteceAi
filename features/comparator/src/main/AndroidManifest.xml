@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.filipe1309.abasteceai.features.comparator">
+
+    <application android:theme="@style/Theme.AbasteceAi">
+        <activity android:name="com.filipe1309.abasteceai.features.comparator.ComparatorActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.filipe1309.abasteceai.features.comparator.open" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

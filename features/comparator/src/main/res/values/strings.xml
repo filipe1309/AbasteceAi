@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AbasteceAi</string>
+    <string name="prompt_fuel">Selecione o combustível</string>
+    <string name="fuels_list">Fuels list</string>
+    <string name="first_fuels_list">Fuels list for item 1</string>
+    <string name="second_fuels_list">Fuels list for item 2</string>
+    <string name="value">Valor</string>
+</resources>
