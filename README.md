@@ -16,6 +16,21 @@ This project was developed to help people decide which fuel to use in their vehi
 - [Android Jetpack](https://developer.android.com/jetpack)
 - [Retrofit](https://square.github.io/retrofit/)
 - [Room](https://developer.android.com/topic/libraries/architecture/room)
+- [Modularization](https://jeroenmols.com/blog/2019/04/02/modularizationexample/)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+
+## :rocket: Features
+
+- [x] Compare fuel by efficiency with the current price
+- [ ] History of fuel comparisons
+- [ ] Register new fuel
+- [ ] News about fuels
+- [ ] Customization (theme, language)
+- [ ] Register new vehicle
+- [ ] Backup/Restore data
+- [ ] Share fuel comparison
+
 
 ## :scroll: Requirements
 
