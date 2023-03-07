@@ -9,7 +9,7 @@
 
 This project was developed to help people decide which fuel to use in their vehicles.
 
-## :computer: Technologies
+## :computer: Technologies & Techniques
 
 - [Kotlin](https://kotlinlang.org/)
 - [Android Studio](https://developer.android.com/studio)
@@ -17,7 +17,8 @@ This project was developed to help people decide which fuel to use in their vehi
 - [Retrofit](https://square.github.io/retrofit/)
 - [Room](https://developer.android.com/topic/libraries/architecture/room)
 - [Modularization](https://jeroenmols.com/blog/2019/04/02/modularizationexample/)
-- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
+- [MVVM](https://developer.android.com/jetpack/guide)
 
 
 ## :rocket: Features
