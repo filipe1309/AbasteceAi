@@ -53,6 +53,13 @@ cd AbasteceAi
 ./gradlew run
 ```
 
+### :gradle: Gradle Tasks
+
+### Generate project dependency graph
+```sh
+ ./gradlew projectDependencyGraph
+```
+
 <!-- ## :white_check_mark: Tests
 
 After up the container:
