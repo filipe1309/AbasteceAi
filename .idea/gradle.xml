@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/features/comparator" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/actions" />
+            <option value="$PROJECT_DIR$/libraries/ui-components" />
           </set>
         </option>
       </GradleProjectSettings>

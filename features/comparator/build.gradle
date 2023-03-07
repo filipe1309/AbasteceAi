@@ -12,6 +12,7 @@ dependencies {
     def nav_version = "2.5.3"
 
     implementation project(':libraries:actions')
+    implementation project(':libraries:ui-components')
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
