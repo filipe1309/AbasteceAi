@@ -1,9 +1,9 @@
 package com.filipe1309.abasteceai
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.filipe1309.abasteceai.libraries.actions.Actions
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,9 +11,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "onCreate")
         setContentView(R.layout.activity_main)
-        startActivity(
-            Intent("com.filipe1309.abasteceai.features.comparator.open")
-                .setPackage(this.packageName)
-        )
+        startActivity(Actions.openComparatorIntent(this))
     }
 }

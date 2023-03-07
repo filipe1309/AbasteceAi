@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "AbasteceAi"
 include ':app'
 include ':features:comparator'
+include ':libraries:actions'

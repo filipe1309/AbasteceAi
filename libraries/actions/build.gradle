@@ -1,0 +1,13 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.filipe1309.abasteceai.libraries.actions'
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.9.0'
+    testImplementation "junit:junit:4.13.2"
+}
