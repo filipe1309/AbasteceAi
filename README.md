@@ -1,13 +1,13 @@
 # <p align="center">AbasteceAi</p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Tools-Android_Studio-informational?style=flat-square&logo=AndroidStudio&color=3DDC84" alt="Android Studio" />
+    <img src="https://img.shields.io/badge/Tools-Android-informational?style=flat-square&logo=Android&color=3DDC84" alt="Android" />
     <img src="https://img.shields.io/badge/Code-Kotlin-informational?style=flat-square&logo=kotlin&color=7F52FF" alt="Kotlin" />
 </p>
 
 ## 💬 About
 
-This project was developed to help people decide which fuel to use in their vehicles.
+This project was developed to help people decide which fuel to use in their vehicles, based on the current price and the efficiency of each fuel.
 
 ## :computer: Technologies & Techniques
 
@@ -32,10 +32,16 @@ This project was developed to help people decide which fuel to use in their vehi
 - [ ] Backup/Restore data
 - [ ] Share fuel comparison
 
+## :building_construction: Architecture
+
+### :package: Modules
+
+[![modules image](docs/project.dot.png)](docs/project.dot.png)
 
 ## :scroll: Requirements
 
 - [Android Studio](https://developer.android.com/studio)
+- [Java 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 
 ## :cd: Installation
 
@@ -59,6 +65,9 @@ cd AbasteceAi
 ```sh
  ./gradlew projectDependencyGraph
 ```
+
+> Then, open Project module dependency graph created at `/build/reports/dependency-graph/project.dot.png`
+
 
 <!-- ## :white_check_mark: Tests
 
