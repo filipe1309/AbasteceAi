@@ -19,6 +19,7 @@ This project was developed to help people decide which fuel to use in their vehi
 - [Modularization](https://jeroenmols.com/blog/2019/04/02/modularizationexample/)
 - [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
 - [MVVM](https://developer.android.com/jetpack/guide)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 
 ## :rocket: Features
@@ -59,7 +60,7 @@ cd AbasteceAi
 ./gradlew run
 ```
 
-### :gradle: Gradle Tasks
+### :gear: Gradle Tasks
 
 ### Generate project dependency graph
 ```sh
@@ -68,6 +69,21 @@ cd AbasteceAi
 
 > Then, open Project module dependency graph created at `/build/reports/dependency-graph/project.dot.png`
 
+## :link: References
+
+- https://developer.android.com/guide/navigation/navigation-getting-started
+- https://www.youtube.com/watch?v=2k8x8V77CrU
+- https://jeroenmols.com/blog/2019/04/02/modularizationexample/
+- https://www.youtube.com/watch?v=PZBg5DIzNww
+- https://developer.android.com/topic/modularization
+- https://developer.android.com/topic/modularization/patterns
+- https://developer.android.com/studio/build/configure-app-module
+- https://jeroenmols.com/blog/2019/06/12/modularizationtips/#dependency-management
+- https://handstandsam.com/2018/02/11/kotlin-buildsrc-for-better-gradle-dependency-management/
+- https://proandroiddev.com/supercharge-android-mvvm-part-1-viewstate-and-actionstate-5816500580ed
+- https://proandroiddev.com/supercharged-android-mvvm-input-stream-c117073760d7
+- https://medium.com/android-news/android-architecture-communication-between-viewmodel-and-view-ce14805d72bf
+- https://proandroiddev.com/viewstate-and-interactions-an-easy-contract-between-view-and-viewmodel-17cdfbd733c7
 
 <!-- ## :white_check_mark: Tests
 
@@ -104,4 +120,4 @@ Please make sure to update tests as appropriate. -->
 ---
 
 > @ Generated with [ShubcoGen Template™](https://github.com/filipe1309/shubcogen-template)  
-> ❓ [Docs](./.shub/README.md)
+
