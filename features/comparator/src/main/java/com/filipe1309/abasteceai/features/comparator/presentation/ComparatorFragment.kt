@@ -8,45 +8,52 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.filipe1309.abasteceai.features.comparator.R
 import com.filipe1309.abasteceai.features.comparator.data.repository.FuelRepositoryImpl
 import com.filipe1309.abasteceai.features.comparator.databinding.FragmentComparatorBinding
-import com.filipe1309.abasteceai.features.comparator.domain.entity.Fuel
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuelsUseCase
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
 
 private const val TAG = "ComparatorFragment"
 
-class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener  {
+class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
+
     private lateinit var binding: FragmentComparatorBinding
     private lateinit var viewModel: ComparatorViewModel
     private lateinit var factory: ComparatorViewModelFactory
-    private var fuels = listOf<Fuel>()
     private lateinit var arrayAdapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d(TAG, "onCreateView")
         binding = FragmentComparatorBinding.inflate(inflater, container, false)
         val fuelRepository = FuelRepositoryImpl()
         val compareFuelsUseCase = CompareFuelsUseCase(fuelRepository)
         val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
-        factory = ComparatorViewModelFactory(compareFuelsUseCase, getFuelsUseCase)
+        val useCasesComparator = UseCasesComparator(compareFuelsUseCase, getFuelsUseCase)
+        factory = ComparatorViewModelFactory(useCasesComparator)
         viewModel = ViewModelProvider(this, factory)[ComparatorViewModel::class.java]
-
-        setupSpinners()
-        setupObservers()
-
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-
+        setupSpinners()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupActions()
+        setupObservers()
+    }
+
+    private fun setupActions() {
+        binding.firstFuelValue.doAfterTextChanged { viewModel.sendAction(ComparatorAction.FuelPriceUpdated) }
+        binding.secondFuelValue.doAfterTextChanged { viewModel.sendAction(ComparatorAction.FuelPriceUpdated) }
     }
 
     private fun setupSpinners() {
@@ -70,55 +77,51 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener  {
     }
 
     private fun setupObservers() {
-        viewModel.getFuels().observe(viewLifecycleOwner) {
-            fuels = it
-            for (fuel in it) {
-                arrayAdapter.add(fuel.name)
-            }
-            arrayAdapter.notifyDataSetChanged()
-            if (arrayAdapter.count > 2) {
-                binding.spinnerFirstFuel.setSelection(1, false)
-                viewModel.firstFuel.value = it[0]
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            render(viewState ?: return@Observer)
+        })
+    }
 
-                binding.spinnerSecondFuel.setSelection(2, false)
-                viewModel.secondFuel.value = it[1]
-            }
-            Log.i(TAG, "Fuels: $it")
+    private fun render(viewState: ComparatorViewState) {
+        Log.d(TAG, "render: $viewState")
+        if (viewState.isComparing && viewState.comparisonResult != null) {
+            renderColor(viewState)
         }
 
-        viewModel.result.observe(viewLifecycleOwner) {
-            if (it.fuel == viewModel.firstFuel.value) {
-                binding.cardViewFirstFuel.setCardBackgroundColor(
-                    ContextCompat.getColor(requireActivity(), android.R.color.holo_green_light)
-                )
-                binding.cardViewSecondFuel.setCardBackgroundColor(
-                    ContextCompat.getColor(requireActivity(), android.R.color.holo_red_light)
-                )
-            } else {
-                binding.cardViewFirstFuel.setCardBackgroundColor(
-                    ContextCompat.getColor(requireActivity(), android.R.color.holo_red_light)
-                )
-                binding.cardViewSecondFuel.setCardBackgroundColor(
-                    ContextCompat.getColor(requireActivity(), android.R.color.holo_green_light)
-                )
-            }
-            Toast.makeText(
-                context,
-                "The best fuel is ${it.fuel.name}, with a cost of ${it.costPerUnitDistance} per unit distance",
-                Toast.LENGTH_LONG
-            ).show()
+        if (viewState.isFuelsLoaded && viewState.fuels != null && !viewState.isFuelsReadyToCompare) {
+            renderSpinner(viewState)
         }
     }
 
-    override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {
-        val fuel = fuels[i - 1]
-        Log.i(TAG, "Selected fuel: $fuel")
-        if (adapterView == binding.spinnerFirstFuel) {
-            viewModel.firstFuel.value = fuel
-        } else {
-            viewModel.secondFuel.value = fuel
+    private fun renderSpinner(viewState: ComparatorViewState) {
+        Log.d(TAG, "renderSpinner: arrayAdapter $arrayAdapter")
+        // this.arrayAdapter.clear()
+        this.arrayAdapter.addAll(viewState.fuels!!.map { it.name })
+        Log.d(TAG, "renderSpinner: fuels ${viewState.fuels}")
+        if (viewState.fuels.size > 1) {
+            binding.spinnerFirstFuel.setSelection(1, false)
+            binding.spinnerSecondFuel.setSelection(2, false)
+            viewModel.sendAction(ComparatorAction.SpinnerRendered)
         }
-        viewModel.compareFuels()
+        this.arrayAdapter.notifyDataSetChanged()
+
+    }
+
+    private fun renderColor(viewState: ComparatorViewState) {
+        binding.cardViewFirstFuel.setCardBackgroundColor(
+            ContextCompat.getColor(requireActivity(), viewState.firstFuel?.color!!)
+        )
+        binding.cardViewSecondFuel.setCardBackgroundColor(
+            ContextCompat.getColor(requireActivity(), viewState.secondFuel?.color!!)
+        )
+    }
+
+    override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {
+        adapterView?.tooltipText = arrayAdapter.getItem(i)
+        if (adapterView?.id == R.id.spinner_first_fuel)
+            viewModel.sendAction(ComparatorAction.FuelSelected(i - 1, true))
+        else
+            viewModel.sendAction(ComparatorAction.FuelSelected(i - 1, false))
     }
 
     override fun onNothingSelected(adapterView: AdapterView<*>?) {
