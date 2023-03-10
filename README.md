@@ -5,6 +5,8 @@
     <img src="https://img.shields.io/badge/Code-Kotlin-informational?style=flat-square&logo=kotlin&color=7F52FF" alt="Kotlin" />
 </p>
 
+[![AbasteceAi](docs/aa_icon_nobg.png)](docs/aa_icon_nobg.png)
+
 ## 💬 About
 
 This project was developed to help people decide which fuel to use in their vehicles, based on the current price and the efficiency of each fuel.
