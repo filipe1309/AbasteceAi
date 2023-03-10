@@ -20,7 +20,7 @@ class FuelRepositoryImpl: FuelRepository {
                 id = 2,
                 name = "Etanol",
                 price = 3.99,
-                efficiency = 8.0,
+                efficiency = 7.0,
                 efficiencyUnit = "km/l"
             )
         }
@@ -39,7 +39,7 @@ class FuelRepositoryImpl: FuelRepository {
                 id = 2,
                 name = "Etanol",
                 price = 3.99,
-                efficiency = 8.0,
+                efficiency = 7.0,
                 efficiencyUnit = "km/l"
             )
         ))

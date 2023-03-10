@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.filipe1309.abasteceai"
-        versionCode 1
-        versionName "1.0"
+        versionCode Versions.version_code
+        versionName Versions.version_name
     }
     buildTypes {
         release {
@@ -24,11 +24,11 @@ dependencies {
     implementation project(':libraries:actions')
     implementation project(':libraries:ui-components')
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation Deps.androidx_support_lib
+    implementation Deps.androidx_constraint_layout
 
     // Tests
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation Deps.junit
+    androidTestImplementation Deps.androidx_test_ext_junit
+    androidTestImplementation Deps.androidx_espresso_core
 }

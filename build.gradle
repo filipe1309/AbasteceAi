@@ -9,13 +9,13 @@ subprojects {
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
             android {
-                compileSdk 33
+                compileSdk Config.compile_sdk
 
                 defaultConfig {
-                    minSdk 26
-                    targetSdk 33
-                    versionCode 1
-                    versionName "1.0"
+                    minSdk Config.min_sdk
+                    targetSdk Config.target_sdk
+                    versionCode Versions.version_code
+                    versionName Versions.version_name
 
                     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
                 }
@@ -27,11 +27,11 @@ subprojects {
                     }
                 }
                 compileOptions {
-                    sourceCompatibility JavaVersion.VERSION_11
-                    targetCompatibility JavaVersion.VERSION_11
+                    sourceCompatibility Config.java_version
+                    targetCompatibility Config.java_version
                 }
                 kotlinOptions {
-                    jvmTarget = '1.8'
+                    jvmTarget = Config.jvm_target
                 }
                 buildFeatures {
                     dataBinding true
