@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.filipe1309.abasteceai.features.comparator">
 
-    <application android:theme="@style/Theme.AbasteceAi">
+    <application
+        android:name=".presentation.ComparatorApp"
+        android:theme="@style/Theme.AbasteceAi">
         <activity android:name="com.filipe1309.abasteceai.features.comparator.ComparatorActivity"
             android:exported="true">
             <intent-filter>

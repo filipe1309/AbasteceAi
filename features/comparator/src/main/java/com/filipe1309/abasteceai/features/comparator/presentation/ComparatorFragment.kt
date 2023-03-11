@@ -11,17 +11,10 @@ import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.filipe1309.abasteceai.features.comparator.R
-import com.filipe1309.abasteceai.features.comparator.data.repository.FuelRepositoryImpl
-import com.filipe1309.abasteceai.features.comparator.data.repository.HistoryRepositoryImpl
 import com.filipe1309.abasteceai.features.comparator.databinding.FragmentComparatorBinding
-import com.filipe1309.abasteceai.features.comparator.domain.repository.FuelRepository
-import com.filipe1309.abasteceai.features.comparator.domain.repository.HistoryRepository
-import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuelsUseCase
-import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
-import com.filipe1309.abasteceai.features.comparator.domain.usecase.SaveComparisonUseCase
 import com.google.android.material.snackbar.Snackbar
 
 private const val TAG = "ComparatorFragment"
@@ -29,8 +22,7 @@ private const val TAG = "ComparatorFragment"
 class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: FragmentComparatorBinding
-    private lateinit var viewModel: ComparatorViewModel
-    private lateinit var factory: ComparatorViewModelFactory
+    private val viewModel: ComparatorViewModel by viewModels {ComparatorViewModel.Factory}
     private lateinit var arrayAdapter: ArrayAdapter<String>
 
     override fun onCreateView(
@@ -38,14 +30,6 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentComparatorBinding.inflate(inflater, container, false)
-        val fuelRepository: FuelRepository = FuelRepositoryImpl()
-        val historyRepository: HistoryRepository = HistoryRepositoryImpl()
-        val compareFuelsUseCase = CompareFuelsUseCase(fuelRepository)
-        val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
-        val saveComparisonUseCase = SaveComparisonUseCase(historyRepository)
-        val useCasesComparator = UseCasesComparator(compareFuelsUseCase, getFuelsUseCase, saveComparisonUseCase)
-        factory = ComparatorViewModelFactory(useCasesComparator)
-        viewModel = ViewModelProvider(this, factory)[ComparatorViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         setupSpinners()
