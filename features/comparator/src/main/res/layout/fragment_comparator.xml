@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
-        tools:context="com.filipe1309.abasteceai.features.comparator.ComparatorActivity" >
+        tools:context="com.filipe1309.abasteceai.features.comparator.presentation.ComparatorActivity" >
 
         <RelativeLayout
             android:id="@+id/relative_layout_first_fuel"

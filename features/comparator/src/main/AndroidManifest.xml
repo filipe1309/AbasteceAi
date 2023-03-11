@@ -5,7 +5,7 @@
     <application
         android:name=".presentation.ComparatorApp"
         android:theme="@style/Theme.AbasteceAi">
-        <activity android:name="com.filipe1309.abasteceai.features.comparator.ComparatorActivity"
+        <activity android:name="com.filipe1309.abasteceai.features.comparator.presentation.ComparatorActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.filipe1309.abasteceai.features.comparator.open" />
