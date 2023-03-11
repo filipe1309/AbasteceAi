@@ -86,6 +86,7 @@ cd AbasteceAi
 - https://proandroiddev.com/supercharged-android-mvvm-input-stream-c117073760d7
 - https://medium.com/android-news/android-architecture-communication-between-viewmodel-and-view-ce14805d72bf
 - https://proandroiddev.com/viewstate-and-interactions-an-easy-contract-between-view-and-viewmodel-17cdfbd733c7
+- https://developer.android.com/develop/ui/views/components/floating-action-button
 
 <!-- ## :white_check_mark: Tests
 

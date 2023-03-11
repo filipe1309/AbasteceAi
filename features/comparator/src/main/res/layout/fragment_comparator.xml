@@ -63,7 +63,7 @@
                         android:id="@+id/first_fuel_value"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="25dp"
                         android:textSize="75sp"
                         android:textAlignment="center"
                         android:textStyle="bold"
@@ -137,7 +137,7 @@
                         android:id="@+id/second_fuel_value"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="25dp"
                         android:textSize="75sp"
                         android:textAlignment="center"
                         android:textStyle="bold"
@@ -161,6 +161,15 @@
                         app:layout_constraintBottom_toBottomOf="@id/second_fuel_value" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:src="@android:drawable/ic_menu_save"
+                    android:contentDescription="@string/save_comparison"
+                    android:layout_margin="16dp" />
 
             </androidx.cardview.widget.CardView>
 

@@ -15,9 +15,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.filipe1309.abasteceai.features.comparator.R
 import com.filipe1309.abasteceai.features.comparator.data.repository.FuelRepositoryImpl
+import com.filipe1309.abasteceai.features.comparator.data.repository.HistoryRepositoryImpl
 import com.filipe1309.abasteceai.features.comparator.databinding.FragmentComparatorBinding
+import com.filipe1309.abasteceai.features.comparator.domain.repository.FuelRepository
+import com.filipe1309.abasteceai.features.comparator.domain.repository.HistoryRepository
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuelsUseCase
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
+import com.filipe1309.abasteceai.features.comparator.domain.usecase.SaveComparisonUseCase
+import com.google.android.material.snackbar.Snackbar
 
 private const val TAG = "ComparatorFragment"
 
@@ -33,10 +38,12 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentComparatorBinding.inflate(inflater, container, false)
-        val fuelRepository = FuelRepositoryImpl()
+        val fuelRepository: FuelRepository = FuelRepositoryImpl()
+        val historyRepository: HistoryRepository = HistoryRepositoryImpl()
         val compareFuelsUseCase = CompareFuelsUseCase(fuelRepository)
         val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
-        val useCasesComparator = UseCasesComparator(compareFuelsUseCase, getFuelsUseCase)
+        val saveComparisonUseCase = SaveComparisonUseCase(historyRepository)
+        val useCasesComparator = UseCasesComparator(compareFuelsUseCase, getFuelsUseCase, saveComparisonUseCase)
         factory = ComparatorViewModelFactory(useCasesComparator)
         viewModel = ViewModelProvider(this, factory)[ComparatorViewModel::class.java]
         binding.viewModel = viewModel
@@ -66,6 +73,7 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.btnRemoveSecondFuel.setOnClickListener {
             viewModel.sendAction(ComparatorAction.ButtonRemoveFuelClicked( it.id == R.id.btn_remove_first_fuel))
         }
+        binding.fab.setOnClickListener { viewModel.sendAction(ComparatorAction.ButtonSaveComparisonClicked) }
     }
 
     private fun setupSpinners() {
@@ -103,6 +111,15 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         if (viewState.isFuelsLoaded && viewState.fuels != null && !viewState.isFuelsReadyToCompare) {
             renderSpinner(viewState)
         }
+
+        if (viewState.isComparisonSaved || viewState.isError) {
+            renderSnackBar(viewState)
+        }
+    }
+
+    private fun renderSnackBar(viewState: ComparatorViewState) {
+        Snackbar.make(binding.root, viewState.message!!, Snackbar.LENGTH_SHORT).show()
+        viewModel.sendAction(ComparatorAction.SnackBarRendered)
     }
 
     private fun renderSpinner(viewState: ComparatorViewState) {

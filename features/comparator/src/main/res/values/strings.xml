@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">AbasteceAi</string>
     <string name="prompt_fuel">Selecione o combustível</string>
-    <string name="fuels_list">Fuels list</string>
-    <string name="first_fuels_list">Fuels list for item 1</string>
-    <string name="second_fuels_list">Fuels list for item 2</string>
+    <string name="fuels_list">Lista de combustíveis</string>
+    <string name="first_fuels_list">Primeira lista de combustíveis</string>
+    <string name="second_fuels_list">Segunda Lista de combustíveis</string>
     <string name="value">Valor</string>
+    <string name="save_comparison">Salvar comparação</string>
+    <string name="comparison_saved">🟢 Comparação salva com sucesso</string>
+    <string name="comparison_not_saved">🔴 Não foi possível salvar a comparação</string>
 </resources>

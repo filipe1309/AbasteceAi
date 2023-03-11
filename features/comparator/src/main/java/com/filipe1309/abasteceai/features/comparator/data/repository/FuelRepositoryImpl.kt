@@ -41,6 +41,13 @@ class FuelRepositoryImpl: FuelRepository {
                 price = 3.50,
                 efficiency = 7.0,
                 efficiencyUnit = "km/l"
+            ),
+            Fuel(
+                id = 3,
+                name = "Diesel",
+                price = 4.00,
+                efficiency = 8.0,
+                efficiencyUnit = "km/l"
             )
         ))
     }

@@ -8,4 +8,6 @@ sealed class ComparatorAction {
     data class CompareFuels(val firstFuelPosition: Int, val secondFuelPosition: Int) : ComparatorAction()
     data class ButtonAddFuelClicked(val isFirstFuel: Boolean) : ComparatorAction()
     data class ButtonRemoveFuelClicked(val isFirstFuel: Boolean) : ComparatorAction()
+    object ButtonSaveComparisonClicked : ComparatorAction()
+    object SnackBarRendered : ComparatorAction()
 }

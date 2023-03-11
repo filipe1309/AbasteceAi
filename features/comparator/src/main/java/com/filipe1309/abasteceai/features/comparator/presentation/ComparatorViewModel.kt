@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.filipe1309.abasteceai.features.comparator.R
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuelsUseCase
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
+import com.filipe1309.abasteceai.features.comparator.domain.usecase.SaveComparisonUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -15,7 +17,8 @@ private const val TAG = "ComparatorViewModel"
 
 data class UseCasesComparator(
     val compareFuelsUseCase: CompareFuelsUseCase,
-    val getFuelsUseCase: GetFuelsUseCase
+    val getFuelsUseCase: GetFuelsUseCase,
+    val saveComparisonUseCase: SaveComparisonUseCase
 )
 
 private const val INCREMENT_VALUE = 0.01
@@ -24,25 +27,13 @@ class ComparatorViewModel(
     private val useCasesComparator: UseCasesComparator,
 ): ViewModel() {
 
-    private var currentViewState = ComparatorViewState()
+    private var currentViewState = ComparatorViewState(isLoading = true)
 
     private val _viewState = MutableLiveData<ComparatorViewState>()
     val viewState: LiveData<ComparatorViewState> = _viewState
     init {
         getFuels()
-        setState(
-            ComparatorViewState(
-                isLoading = true,
-                isComparing = false,
-                isFuelsLoaded = false,
-                isFuelsReadyToCompare = false,
-                error = null,
-                firstFuel = null,
-                secondFuel = null,
-                fuels = null,
-                comparisonResult = null
-            )
-        )
+        setState(currentViewState.copy())
     }
 
     private fun setState(viewState: ComparatorViewState) {
@@ -101,6 +92,12 @@ class ComparatorViewModel(
                     setState(currentViewState.copy(secondFuel = currentViewState.secondFuel))
                 }
             }
+            is ComparatorAction.ButtonSaveComparisonClicked -> {
+                saveComparison()
+            }
+            is ComparatorAction.SnackBarRendered -> {
+                setState(currentViewState.copy(isComparisonSaved = false, isError = false))
+            }
         }
     }
 
@@ -141,6 +138,30 @@ class ComparatorViewModel(
                 isLoading = false,
                 comparisonResult = comparisonResult,
             ))
+        }
+    }
+
+    private fun saveComparison() {
+        Log.d(TAG, "saveComparison: ")
+        viewModelScope.launch(Dispatchers.IO) {
+            val isComparisonSaved = useCasesComparator.saveComparisonUseCase.invoke(
+                currentViewState.firstFuel!!, currentViewState.secondFuel!!
+            )
+
+            if (isComparisonSaved) {
+                setState(currentViewState.copy(
+                    isLoading = false,
+                    isComparisonSaved = true,
+                    message = R.string.comparison_saved
+                ))
+            } else {
+                setState(currentViewState.copy(
+                    isLoading = false,
+                    isComparisonSaved = false,
+                    isError = true,
+                    message = R.string.comparison_not_saved
+                ))
+            }
         }
     }
 }
