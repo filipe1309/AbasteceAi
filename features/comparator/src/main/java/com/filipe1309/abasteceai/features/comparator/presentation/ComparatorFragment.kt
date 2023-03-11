@@ -54,6 +54,18 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun setupActions() {
         binding.firstFuelValue.doAfterTextChanged { viewModel.sendAction(ComparatorAction.FuelPriceUpdated) }
         binding.secondFuelValue.doAfterTextChanged { viewModel.sendAction(ComparatorAction.FuelPriceUpdated) }
+        binding.btnAddFirstFuel.setOnClickListener {
+            viewModel.sendAction(ComparatorAction.ButtonAddFuelClicked( it.id == R.id.btn_add_first_fuel))
+        }
+        binding.btnRemoveFirstFuel.setOnClickListener {
+            viewModel.sendAction(ComparatorAction.ButtonRemoveFuelClicked( it.id == R.id.btn_remove_first_fuel))
+        }
+        binding.btnAddSecondFuel.setOnClickListener {
+            viewModel.sendAction(ComparatorAction.ButtonAddFuelClicked( it.id == R.id.btn_add_first_fuel))
+        }
+        binding.btnRemoveSecondFuel.setOnClickListener {
+            viewModel.sendAction(ComparatorAction.ButtonRemoveFuelClicked( it.id == R.id.btn_remove_first_fuel))
+        }
     }
 
     private fun setupSpinners() {

@@ -11,7 +11,7 @@ class FuelRepositoryImpl: FuelRepository {
             return Fuel(
                     id = 1,
                     name = "Gasolina",
-                    price = 4.99,
+                    price = 5.00,
                     efficiency = 10.0,
                     efficiencyUnit = "km/l"
                 )
@@ -19,7 +19,7 @@ class FuelRepositoryImpl: FuelRepository {
             return Fuel(
                 id = 2,
                 name = "Etanol",
-                price = 3.99,
+                price = 3.50,
                 efficiency = 7.0,
                 efficiencyUnit = "km/l"
             )
@@ -31,14 +31,14 @@ class FuelRepositoryImpl: FuelRepository {
             Fuel(
                 id = 1,
                 name = "Gasolina",
-                price = 4.99,
+                price = 5.00,
                 efficiency = 10.0,
                 efficiencyUnit = "km/l"
             ),
             Fuel(
                 id = 2,
                 name = "Etanol",
-                price = 3.99,
+                price = 3.50,
                 efficiency = 7.0,
                 efficiencyUnit = "km/l"
             )

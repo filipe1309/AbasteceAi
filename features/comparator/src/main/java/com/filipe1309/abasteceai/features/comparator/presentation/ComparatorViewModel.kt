@@ -9,6 +9,7 @@ import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuels
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 private const val TAG = "ComparatorViewModel"
 
@@ -16,6 +17,8 @@ data class UseCasesComparator(
     val compareFuelsUseCase: CompareFuelsUseCase,
     val getFuelsUseCase: GetFuelsUseCase
 )
+
+private const val INCREMENT_VALUE = 0.01
 
 class ComparatorViewModel(
     private val useCasesComparator: UseCasesComparator,
@@ -60,6 +63,44 @@ class ComparatorViewModel(
                 }
             }
             is ComparatorAction.FuelPriceUpdated -> { compareFuels() }
+            is ComparatorAction.ButtonAddFuelClicked -> {
+                if (action.isFirstFuel) {
+                    currentViewState.firstFuel?.price = currentViewState.firstFuel?.price?.plus(
+                        INCREMENT_VALUE
+                    )!!
+                    currentViewState.firstFuel?.price = String.format(
+                        Locale.getDefault(),"%.2f", currentViewState.firstFuel?.price
+                    ).toDouble()
+                    setState(currentViewState.copy(firstFuel = currentViewState.firstFuel))
+                } else {
+                    currentViewState.secondFuel?.price = currentViewState.secondFuel?.price?.plus(
+                        INCREMENT_VALUE
+                    )!!
+                    currentViewState.secondFuel?.price = String.format(
+                        Locale.getDefault(),"%.2f", currentViewState.secondFuel?.price
+                    ).toDouble()
+                    setState(currentViewState.copy(secondFuel = currentViewState.secondFuel))
+                }
+            }
+            is ComparatorAction.ButtonRemoveFuelClicked -> {
+                if (action.isFirstFuel) {
+                    currentViewState.firstFuel?.price = currentViewState.firstFuel?.price?.minus(
+                        INCREMENT_VALUE
+                    )!!
+                    currentViewState.firstFuel?.price = String.format(
+                        Locale.getDefault(),"%.2f", currentViewState.firstFuel?.price
+                    ).toDouble()
+                    setState(currentViewState.copy(firstFuel = currentViewState.firstFuel))
+                } else {
+                    currentViewState.secondFuel?.price = currentViewState.secondFuel?.price?.minus(
+                        INCREMENT_VALUE
+                    )!!
+                    currentViewState.secondFuel?.price = String.format(
+                        Locale.getDefault(),"%.2f", currentViewState.secondFuel?.price
+                    ).toDouble()
+                    setState(currentViewState.copy(secondFuel = currentViewState.secondFuel))
+                }
+            }
         }
     }
 
