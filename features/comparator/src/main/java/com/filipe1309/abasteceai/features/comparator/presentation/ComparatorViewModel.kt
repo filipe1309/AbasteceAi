@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.absoluteValue
 
 private const val TAG = "ComparatorViewModel"
 
@@ -28,6 +29,7 @@ data class UseCasesComparator(
 )
 
 private const val INCREMENT_VALUE = 0.01
+private const val INCREMENT_LONG_VALUE = 0.1
 
 class ComparatorViewModel(
     private val useCasesComparator: UseCasesComparator,
@@ -89,18 +91,26 @@ class ComparatorViewModel(
     private fun onAddFuelClicked(viewIntent: ComparatorViewIntent.OnAddFuelClicked) {
         Log.d(TAG, "onAddFuelClicked: $viewIntent")
         if (viewIntent.isfirstFuel) {
-            setState(uiState.value.copy(firstFuelPrice = updateFuelPrice(uiState.value.firstFuelPrice, true)))
+            setState(uiState.value.copy(
+                firstFuelPrice = updateFuelPrice(uiState.value.firstFuelPrice, viewIntent.isLong)
+            ))
         } else {
-            setState(uiState.value.copy(secondFuelPrice = updateFuelPrice(uiState.value.secondFuelPrice, true)))
+            setState(uiState.value.copy(
+                secondFuelPrice = updateFuelPrice(uiState.value.secondFuelPrice, viewIntent.isLong)
+            ))
         }
     }
 
     private fun onSubtractFuelClicked(viewIntent: ComparatorViewIntent.OnSubtractFuelClicked) {
         Log.d(TAG, "onSubtractFuelClicked: $viewIntent")
         if (viewIntent.isfirstFuel) {
-            setState(uiState.value.copy(firstFuelPrice = updateFuelPrice(uiState.value.firstFuelPrice, false)))
+            setState(uiState.value.copy(
+                firstFuelPrice = updateFuelPrice(-uiState.value.firstFuelPrice, viewIntent.isLong)
+            ))
         } else {
-            setState(uiState.value.copy(secondFuelPrice = updateFuelPrice(uiState.value.secondFuelPrice, false)))
+            setState(uiState.value.copy(
+                secondFuelPrice = updateFuelPrice(-uiState.value.secondFuelPrice, viewIntent.isLong)
+            ))
         }
     }
 
@@ -191,14 +201,10 @@ class ComparatorViewModel(
         setState(uiState.value.copy(isFuelsReadyToCompare = true, isFuelsUpdated = false))
     }
 
-    private fun updateFuelPrice(fuelPrice: Double, isIncrement: Boolean): Double {
+    private fun updateFuelPrice(fuelPrice: Double, isLong: Boolean): Double {
         var fuelPriceUpdated = fuelPrice
-        if (isIncrement) {
-            fuelPriceUpdated += INCREMENT_VALUE
-        } else {
-            fuelPriceUpdated -= INCREMENT_VALUE
-        }
-        fuelPriceUpdated = String.format(Locale.getDefault(),"%.2f", fuelPriceUpdated).toDouble()
+        fuelPriceUpdated += if (isLong) INCREMENT_LONG_VALUE else INCREMENT_VALUE
+        fuelPriceUpdated = String.format(Locale.getDefault(),"%.2f", fuelPriceUpdated.absoluteValue).toDouble()
         return fuelPriceUpdated
     }
 

@@ -70,6 +70,7 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     secondFuelPrice = binding.secondFuelPrice.text.toString().toDouble()
                 ))
         }
+
         binding.secondFuelPrice.doAfterTextChanged {
             Log.d(TAG, "secondFuelPrice.doAfterTextChanged secondFuelValue: $it")
             Log.d(TAG, "secondFuelPrice.doAfterTextChanged firstFuelValue: ${binding.firstFuelPrice.text}")
@@ -79,21 +80,48 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     secondFuelPrice = it.toString().toDouble()
                 ))
         }
+
         binding.btnAddFirstFuel.setOnClickListener {
-            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel))
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel, false))
         }
+
+        binding.btnAddFirstFuel.setOnLongClickListener {
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel, true))
+            true
+        }
+
         binding.btnRemoveFirstFuel.setOnClickListener {
             viewModel.dispatchViewIntent(
-                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel)
+                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel, false)
             )
         }
-        binding.btnAddSecondFuel.setOnClickListener {
-            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel))
+
+        binding.btnRemoveFirstFuel.setOnLongClickListener {
+            viewModel.dispatchViewIntent(
+                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel, true)
+            )
+            true
         }
+
+        binding.btnAddSecondFuel.setOnClickListener {
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel, false))
+        }
+
+        binding.btnAddSecondFuel.setOnLongClickListener {
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel, true))
+            true
+        }
+
         binding.btnRemoveSecondFuel.setOnClickListener {
             viewModel.dispatchViewIntent(
-                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel)
+                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel, false)
             )
+        }
+        binding.btnRemoveSecondFuel.setOnLongClickListener {
+            viewModel.dispatchViewIntent(
+                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel, true)
+            )
+            true
         }
         binding.fab.setOnClickListener { viewModel.dispatchViewIntent(ComparatorViewIntent.OnSaveClicked) }
     }
