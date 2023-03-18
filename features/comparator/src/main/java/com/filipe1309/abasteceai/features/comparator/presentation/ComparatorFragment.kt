@@ -65,27 +65,37 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
             Log.d(TAG, "firstFuelPrice.doAfterTextChanged firstFuelValue: $it")
             Log.d(TAG, "firstFuelPrice.doAfterTextChanged secondFuelValue: ${binding.secondFuelPrice.text}")
             if (binding.secondFuelPrice.text.isNotEmpty())
-                viewModel.compareFuels(it.toString().toDouble(), binding.secondFuelPrice.text.toString().toDouble())
+                viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelTyped(
+                    firstFuelPrice = it.toString().toDouble(),
+                    secondFuelPrice = binding.secondFuelPrice.text.toString().toDouble()
+                ))
         }
         binding.secondFuelPrice.doAfterTextChanged {
             Log.d(TAG, "secondFuelPrice.doAfterTextChanged secondFuelValue: $it")
             Log.d(TAG, "secondFuelPrice.doAfterTextChanged firstFuelValue: ${binding.firstFuelPrice.text}")
             if (binding.firstFuelPrice.text.isNotEmpty())
-                viewModel.compareFuels(binding.firstFuelPrice.text.toString().toDouble(), it.toString().toDouble())
+                viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelTyped(
+                    firstFuelPrice = binding.firstFuelPrice.text.toString().toDouble(),
+                    secondFuelPrice = it.toString().toDouble()
+                ))
         }
         binding.btnAddFirstFuel.setOnClickListener {
-            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_add_first_fuel, true)
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel))
         }
         binding.btnRemoveFirstFuel.setOnClickListener {
-            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_remove_first_fuel, false)
+            viewModel.dispatchViewIntent(
+                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel)
+            )
         }
         binding.btnAddSecondFuel.setOnClickListener {
-            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_add_first_fuel, true)
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnAddFuelClicked(it.id == R.id.btn_add_first_fuel))
         }
         binding.btnRemoveSecondFuel.setOnClickListener {
-            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_remove_first_fuel, false)
+            viewModel.dispatchViewIntent(
+                ComparatorViewIntent.OnSubtractFuelClicked(it.id == R.id.btn_remove_first_fuel)
+            )
         }
-        binding.fab.setOnClickListener { viewModel.saveComparison() }
+        binding.fab.setOnClickListener { viewModel.dispatchViewIntent(ComparatorViewIntent.OnSaveClicked) }
     }
 
     private fun setupSpinners() {
@@ -131,7 +141,7 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun renderSnackBar(messageId: Int) {
         Log.d(TAG, "renderSnackBar")
         Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
-        viewModel.snackBarRendered()
+        viewModel.dispatchViewIntent(ComparatorViewIntent.OnSnackBarRendered)
     }
 
     private fun renderSpinner(fuels: List<String>) {
@@ -142,7 +152,7 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         if (fuels.size > 1) {
             binding.spinnerFirstFuel.setSelection(1, false)
             binding.spinnerSecondFuel.setSelection(2, false)
-            viewModel.spinnerRendered()
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnSpinnerRendered)
         }
     }
 
@@ -171,9 +181,9 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {
         adapterView?.tooltipText = arrayAdapter.getItem(i)
         if (adapterView?.id == R.id.spinner_first_fuel)
-            viewModel.fuelSelected(i - 1, true)
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelSelected(true, i-1))
         else
-            viewModel.fuelSelected(i - 1, false)
+            viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelSelected(false, i-1))
     }
 
     override fun onNothingSelected(adapterView: AdapterView<*>?) {

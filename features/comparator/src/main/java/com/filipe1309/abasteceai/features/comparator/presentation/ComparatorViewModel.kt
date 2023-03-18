@@ -47,6 +47,18 @@ class ComparatorViewModel(
         }
     }
 
+    fun dispatchViewIntent(viewIntent: ComparatorViewIntent) {
+        when (viewIntent) {
+            is ComparatorViewIntent.OnFuelSelected -> onFuelSelected(viewIntent)
+            is ComparatorViewIntent.OnSpinnerRendered -> onSpinnerRendered()
+            is ComparatorViewIntent.OnSnackBarRendered -> onSnackBarRendered()
+            is ComparatorViewIntent.OnSaveClicked -> onSaveClicked()
+            is ComparatorViewIntent.OnFuelTyped -> onFuelTyped(viewIntent)
+            is ComparatorViewIntent.OnAddFuelClicked -> onAddFuelClicked(viewIntent)
+            is ComparatorViewIntent.OnSubtractFuelClicked -> onSubtractFuelClicked(viewIntent)
+        }
+    }
+
     private fun sendAction(action: ComparatorAction) {
         viewModelScope.launch {
             _action.emit(action)
@@ -55,6 +67,41 @@ class ComparatorViewModel(
 
     private fun setState(uiState: ComparatorViewState) {
         _uiState.value = uiState
+    }
+
+    private fun onFuelSelected(viewIntent: ComparatorViewIntent.OnFuelSelected) {
+        Log.d(TAG, "onFuelSelected: $viewIntent")
+        fuelSelected(viewIntent.isfirstFuel, viewIntent.position)
+    }
+
+    private fun onFuelTyped(viewIntent: ComparatorViewIntent.OnFuelTyped) {
+        Log.d(TAG, "nnFuelTyped: $viewIntent")
+        setState(uiState.value.copy(isLoading = true, isComparing = true))
+        compareFuels(viewIntent.firstFuelPrice, viewIntent.secondFuelPrice)
+    }
+
+    private fun onSaveClicked() {
+        Log.d(TAG, "onSaveClicked")
+        setState(uiState.value.copy(isLoading = true))
+        saveComparison()
+    }
+
+    private fun onAddFuelClicked(viewIntent: ComparatorViewIntent.OnAddFuelClicked) {
+        Log.d(TAG, "onAddFuelClicked: $viewIntent")
+        if (viewIntent.isfirstFuel) {
+            setState(uiState.value.copy(firstFuelPrice = updateFuelPrice(uiState.value.firstFuelPrice, true)))
+        } else {
+            setState(uiState.value.copy(secondFuelPrice = updateFuelPrice(uiState.value.secondFuelPrice, true)))
+        }
+    }
+
+    private fun onSubtractFuelClicked(viewIntent: ComparatorViewIntent.OnSubtractFuelClicked) {
+        Log.d(TAG, "onSubtractFuelClicked: $viewIntent")
+        if (viewIntent.isfirstFuel) {
+            setState(uiState.value.copy(firstFuelPrice = updateFuelPrice(uiState.value.firstFuelPrice, false)))
+        } else {
+            setState(uiState.value.copy(secondFuelPrice = updateFuelPrice(uiState.value.secondFuelPrice, false)))
+        }
     }
 
     private suspend fun getFuels() {
@@ -79,10 +126,8 @@ class ComparatorViewModel(
             .launchIn(viewModelScope)
     }
 
-    fun compareFuels(firstFuelPrice: Double, secondFuelPrice: Double) {
+    private fun compareFuels(firstFuelPrice: Double, secondFuelPrice: Double) {
         Log.d(TAG, "compareFuels: ")
-        setState(uiState.value.copy(isLoading = true, isComparing = true))
-
         val firstFuel = uiState.value.fuels!!.first { it.name == uiState.value.firstFuelName }
         val firstFuelUpdated = firstFuel.copy(price = firstFuelPrice)
         val secondFuel = uiState.value.fuels!!.first { it.name == uiState.value.secondFuelName }
@@ -117,7 +162,7 @@ class ComparatorViewModel(
         }
     }
 
-    fun saveComparison() {
+    private fun saveComparison() {
         Log.d(TAG, "saveComparison: ")
         val firstFuel = uiState.value.fuels!!.first { it.name == uiState.value.firstFuelName }
         val secondFuel = uiState.value.fuels!!.first { it.name == uiState.value.secondFuelName }
@@ -138,21 +183,12 @@ class ComparatorViewModel(
         }
     }
 
-    fun snackBarRendered() {
+    private fun onSnackBarRendered() {
         setState(uiState.value.copy(isComparisonSaved = false))
     }
 
-    fun spinnerRendered() {
+    private fun onSpinnerRendered() {
         setState(uiState.value.copy(isFuelsReadyToCompare = true, isFuelsUpdated = false))
-    }
-
-    fun incrementDecrementFuelPrice(isFirstFuel: Boolean, isIncrement: Boolean) {
-        Log.d(TAG, "incrementDecrementFuelPrice: isFirstFuel $isFirstFuel, isIncrement $isIncrement")
-        if (isFirstFuel) {
-            setState(uiState.value.copy(firstFuelPrice = updateFuelPrice(uiState.value.firstFuelPrice, isIncrement)))
-        } else {
-            setState(uiState.value.copy(secondFuelPrice = updateFuelPrice(uiState.value.secondFuelPrice, isIncrement)))
-        }
     }
 
     private fun updateFuelPrice(fuelPrice: Double, isIncrement: Boolean): Double {
@@ -166,7 +202,7 @@ class ComparatorViewModel(
         return fuelPriceUpdated
     }
 
-    fun fuelSelected(position: Int, isFirstFuel: Boolean) {
+    private fun fuelSelected(isFirstFuel: Boolean, position: Int) {
         val fuel = uiState.value.fuels?.get(position)
         if (isFirstFuel) {
             setState(uiState.value.copy(
