@@ -8,4 +8,5 @@
     <string name="save_comparison">Salvar comparação</string>
     <string name="comparison_saved">🟢 Comparação salva com sucesso</string>
     <string name="comparison_not_saved">🔴 Não foi possível salvar a comparação</string>
+    <string name="error_loading_fuels">Erro ao carregar os combustíveis</string>
 </resources>

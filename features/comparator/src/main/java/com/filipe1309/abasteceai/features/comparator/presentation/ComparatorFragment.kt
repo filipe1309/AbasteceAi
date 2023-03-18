@@ -12,10 +12,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.filipe1309.abasteceai.features.comparator.R
 import com.filipe1309.abasteceai.features.comparator.databinding.FragmentComparatorBinding
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 private const val TAG = "ComparatorFragment"
 
@@ -38,26 +42,50 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActions()
-        setupObservers()
+        setupListeners()
+        setupStateObservers()
+        setupActionObservers()
     }
 
-    private fun setupActions() {
-        binding.firstFuelValue.doAfterTextChanged { viewModel.sendAction(ComparatorAction.FuelPriceUpdated) }
-        binding.secondFuelValue.doAfterTextChanged { viewModel.sendAction(ComparatorAction.FuelPriceUpdated) }
+    private fun setupActionObservers() {
+        Log.d(TAG, "setupActionObservers")
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.action.collect { action ->
+                    when (action) {
+                        is ComparatorAction.ShowSnackBar -> renderSnackBar(action.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupListeners() {
+        binding.firstFuelPrice.doAfterTextChanged {
+            Log.d(TAG, "firstFuelPrice.doAfterTextChanged firstFuelValue: $it")
+            Log.d(TAG, "firstFuelPrice.doAfterTextChanged secondFuelValue: ${binding.secondFuelPrice.text}")
+            if (binding.secondFuelPrice.text.isNotEmpty())
+                viewModel.compareFuels(it.toString().toDouble(), binding.secondFuelPrice.text.toString().toDouble())
+        }
+        binding.secondFuelPrice.doAfterTextChanged {
+            Log.d(TAG, "secondFuelPrice.doAfterTextChanged secondFuelValue: $it")
+            Log.d(TAG, "secondFuelPrice.doAfterTextChanged firstFuelValue: ${binding.firstFuelPrice.text}")
+            if (binding.firstFuelPrice.text.isNotEmpty())
+                viewModel.compareFuels(binding.firstFuelPrice.text.toString().toDouble(), it.toString().toDouble())
+        }
         binding.btnAddFirstFuel.setOnClickListener {
-            viewModel.sendAction(ComparatorAction.ButtonAddFuelClicked( it.id == R.id.btn_add_first_fuel))
+            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_add_first_fuel, true)
         }
         binding.btnRemoveFirstFuel.setOnClickListener {
-            viewModel.sendAction(ComparatorAction.ButtonRemoveFuelClicked( it.id == R.id.btn_remove_first_fuel))
+            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_remove_first_fuel, false)
         }
         binding.btnAddSecondFuel.setOnClickListener {
-            viewModel.sendAction(ComparatorAction.ButtonAddFuelClicked( it.id == R.id.btn_add_first_fuel))
+            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_add_first_fuel, true)
         }
         binding.btnRemoveSecondFuel.setOnClickListener {
-            viewModel.sendAction(ComparatorAction.ButtonRemoveFuelClicked( it.id == R.id.btn_remove_first_fuel))
+            viewModel.incrementDecrementFuelPrice( it.id == R.id.btn_remove_first_fuel, false)
         }
-        binding.fab.setOnClickListener { viewModel.sendAction(ComparatorAction.ButtonSaveComparisonClicked) }
+        binding.fab.setOnClickListener { viewModel.saveComparison() }
     }
 
     private fun setupSpinners() {
@@ -80,61 +108,72 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private fun setupObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            render(viewState ?: return@Observer)
-        })
-    }
-
-    private fun render(viewState: ComparatorViewState) {
-        Log.d(TAG, "render: $viewState")
-        if (viewState.isComparing && viewState.comparisonResult != null) {
-            renderColor(viewState)
-        }
-
-        if (viewState.isFuelsLoaded && viewState.fuels != null && !viewState.isFuelsReadyToCompare) {
-            renderSpinner(viewState)
-        }
-
-        if (viewState.isComparisonSaved || viewState.isError) {
-            renderSnackBar(viewState)
+    private fun setupStateObservers() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest { uiState ->
+                    render(uiState) }
+            }
         }
     }
 
-    private fun renderSnackBar(viewState: ComparatorViewState) {
-        Snackbar.make(binding.root, viewState.message!!, Snackbar.LENGTH_SHORT).show()
-        viewModel.sendAction(ComparatorAction.SnackBarRendered)
+    private fun render(uiState: ComparatorViewState) {
+        Log.d(TAG, "render: $uiState")
+        with (uiState) {
+            if (isFuelsReadyToCompare && !isLoading) {
+                renderPrices(firstFuelPrice, secondFuelPrice)
+                renderColor(firstFuelColor, secondFuelColor)
+                if (isFuelsUpdated) renderSpinner(fuels!!.map { it.name })
+            }
+        }
     }
 
-    private fun renderSpinner(viewState: ComparatorViewState) {
+    private fun renderSnackBar(messageId: Int) {
+        Log.d(TAG, "renderSnackBar")
+        Snackbar.make(binding.root, messageId, Snackbar.LENGTH_SHORT).show()
+        viewModel.snackBarRendered()
+    }
+
+    private fun renderSpinner(fuels: List<String>) {
         Log.d(TAG, "renderSpinner: arrayAdapter $arrayAdapter")
         // this.arrayAdapter.clear()
-        this.arrayAdapter.addAll(viewState.fuels!!.map { it.name })
-        Log.d(TAG, "renderSpinner: fuels ${viewState.fuels}")
-        if (viewState.fuels.size > 1) {
+        this.arrayAdapter.addAll(fuels)
+        Log.d(TAG, "- renderSpinner: fuels ${fuels}")
+        if (fuels.size > 1) {
             binding.spinnerFirstFuel.setSelection(1, false)
             binding.spinnerSecondFuel.setSelection(2, false)
-            viewModel.sendAction(ComparatorAction.SpinnerRendered)
+            viewModel.spinnerRendered()
         }
-        this.arrayAdapter.notifyDataSetChanged()
-
     }
 
-    private fun renderColor(viewState: ComparatorViewState) {
+    private fun renderColor(firstFuelColor: Int, secondFuelColor: Int) {
+        Log.d(TAG, "renderColor: ${firstFuelColor} ${secondFuelColor}")
         binding.cardViewFirstFuel.setCardBackgroundColor(
-            ContextCompat.getColor(requireActivity(), viewState.firstFuel?.color!!)
+            ContextCompat.getColor(requireActivity(), firstFuelColor)
         )
         binding.cardViewSecondFuel.setCardBackgroundColor(
-            ContextCompat.getColor(requireActivity(), viewState.secondFuel?.color!!)
+            ContextCompat.getColor(requireActivity(), secondFuelColor)
         )
+    }
+
+    private fun renderPrices(firstFuelPrice: Double, secondFuelPrice: Double) {
+        Log.d(TAG, "renderPrices: ${firstFuelPrice} ${secondFuelPrice}")
+        if (hasPriceChanged(firstFuelPrice, binding.firstFuelPrice.text.toString()))
+            binding.firstFuelPrice.setText(firstFuelPrice.toString())
+        if (hasPriceChanged(secondFuelPrice, binding.secondFuelPrice.text.toString()))
+            binding.secondFuelPrice.setText(secondFuelPrice.toString())
+    }
+
+    private fun hasPriceChanged(price: Double, priceText: String): Boolean {
+        return priceText.isEmpty() || (priceText.isNotEmpty() && price != priceText.toDouble())
     }
 
     override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {
         adapterView?.tooltipText = arrayAdapter.getItem(i)
         if (adapterView?.id == R.id.spinner_first_fuel)
-            viewModel.sendAction(ComparatorAction.FuelSelected(i - 1, true))
+            viewModel.fuelSelected(i - 1, true)
         else
-            viewModel.sendAction(ComparatorAction.FuelSelected(i - 1, false))
+            viewModel.fuelSelected(i - 1, false)
     }
 
     override fun onNothingSelected(adapterView: AdapterView<*>?) {

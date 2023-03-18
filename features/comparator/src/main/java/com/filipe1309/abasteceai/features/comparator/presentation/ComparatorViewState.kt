@@ -10,9 +10,13 @@ data class ComparatorViewState (
     val isFuelsLoaded: Boolean = false,
     val isFuelsReadyToCompare: Boolean = false,
     val isError: Boolean = false,
-    val firstFuel: Fuel? = null,
-    val secondFuel: Fuel? = null,
+    val isFuelsUpdated: Boolean = false,
+    val firstFuelName: String = "",
+    val secondFuelName: String = "",
+    val firstFuelPrice: Double = 0.0,
+    val secondFuelPrice: Double = 0.0,
+    val firstFuelColor: Int = android.R.color.holo_blue_dark,
+    val secondFuelColor: Int = android.R.color.holo_blue_dark,
     val fuels: List<Fuel>? = null,
-    val comparisonResult: ComparisonResult? = null,
-    val message: Int? = null
+    val comparisonResult: ComparisonResult? = null
 )

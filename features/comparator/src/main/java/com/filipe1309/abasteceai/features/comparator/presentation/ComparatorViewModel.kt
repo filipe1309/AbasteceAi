@@ -1,7 +1,9 @@
 package com.filipe1309.abasteceai.features.comparator.presentation
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.filipe1309.abasteceai.features.comparator.R
@@ -13,6 +15,7 @@ import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuels
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.SaveComparisonUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -30,141 +33,151 @@ class ComparatorViewModel(
     private val useCasesComparator: UseCasesComparator,
 ): ViewModel() {
 
-    private var currentViewState = ComparatorViewState(isLoading = true)
+    private val _uiState = MutableStateFlow(ComparatorViewState(isLoading = true))
+    val uiState: StateFlow<ComparatorViewState> =_uiState.asStateFlow()
 
-    private val _viewState = MutableLiveData<ComparatorViewState>()
-    val viewState: LiveData<ComparatorViewState> = _viewState
+    private val _action = MutableSharedFlow<ComparatorAction>()
+    val action: SharedFlow<ComparatorAction> =_action.asSharedFlow()
+
+
     init {
-        getFuels()
-        setState(currentViewState.copy())
-    }
-
-    private fun setState(viewState: ComparatorViewState) {
-        currentViewState = viewState
-        _viewState.postValue(currentViewState)
-    }
-
-    fun sendAction(action: ComparatorAction) {
-        when (action) {
-            is ComparatorAction.GetFuels -> getFuels()
-            is ComparatorAction.CompareFuels -> compareFuels()
-            is ComparatorAction.SpinnerRendered -> setState(currentViewState.copy(isFuelsReadyToCompare = true))
-            is ComparatorAction.FuelSelected -> {
-                if (action.isFirstFuel) {
-                    setState(currentViewState.copy(firstFuel = currentViewState.fuels?.get(action.fuelPosition)))
-                } else {
-                    setState(currentViewState.copy(secondFuel = currentViewState.fuels?.get(action.fuelPosition)))
-                }
-            }
-            is ComparatorAction.FuelPriceUpdated -> { compareFuels() }
-            is ComparatorAction.ButtonAddFuelClicked -> {
-                if (action.isFirstFuel) {
-                    currentViewState.firstFuel?.price = currentViewState.firstFuel?.price?.plus(
-                        INCREMENT_VALUE
-                    )!!
-                    currentViewState.firstFuel?.price = String.format(
-                        Locale.getDefault(),"%.2f", currentViewState.firstFuel?.price
-                    ).toDouble()
-                    setState(currentViewState.copy(firstFuel = currentViewState.firstFuel))
-                } else {
-                    currentViewState.secondFuel?.price = currentViewState.secondFuel?.price?.plus(
-                        INCREMENT_VALUE
-                    )!!
-                    currentViewState.secondFuel?.price = String.format(
-                        Locale.getDefault(),"%.2f", currentViewState.secondFuel?.price
-                    ).toDouble()
-                    setState(currentViewState.copy(secondFuel = currentViewState.secondFuel))
-                }
-            }
-            is ComparatorAction.ButtonRemoveFuelClicked -> {
-                if (action.isFirstFuel) {
-                    currentViewState.firstFuel?.price = currentViewState.firstFuel?.price?.minus(
-                        INCREMENT_VALUE
-                    )!!
-                    currentViewState.firstFuel?.price = String.format(
-                        Locale.getDefault(),"%.2f", currentViewState.firstFuel?.price
-                    ).toDouble()
-                    setState(currentViewState.copy(firstFuel = currentViewState.firstFuel))
-                } else {
-                    currentViewState.secondFuel?.price = currentViewState.secondFuel?.price?.minus(
-                        INCREMENT_VALUE
-                    )!!
-                    currentViewState.secondFuel?.price = String.format(
-                        Locale.getDefault(),"%.2f", currentViewState.secondFuel?.price
-                    ).toDouble()
-                    setState(currentViewState.copy(secondFuel = currentViewState.secondFuel))
-                }
-            }
-            is ComparatorAction.ButtonSaveComparisonClicked -> {
-                saveComparison()
-            }
-            is ComparatorAction.SnackBarRendered -> {
-                setState(currentViewState.copy(isComparisonSaved = false, isError = false))
-            }
-        }
-    }
-
-    private fun getFuels() {
-        Log.d(TAG, "getFuels: ")
+        setState(ComparatorViewState(isLoading = true))
         viewModelScope.launch(Dispatchers.IO) {
-            useCasesComparator.getFuelsUseCase.invoke().collect { fuels ->
-                setState(
-                    currentViewState.copy(
-                        isLoading = false,
-                        isComparing = false,
-                        isFuelsLoaded = true,
-                        isFuelsReadyToCompare = false,
-                        fuels = fuels,
-                        firstFuel = fuels[0],
-                        secondFuel = fuels[1],
-                    )
-                )
-            }
+            getFuels()
         }
     }
 
-    private fun compareFuels() {
+    private fun sendAction(action: ComparatorAction) {
+        viewModelScope.launch {
+            _action.emit(action)
+        }
+    }
+
+    private fun setState(uiState: ComparatorViewState) {
+        _uiState.value = uiState
+    }
+
+    private suspend fun getFuels() {
+        Log.d(TAG, "getFuels: ")
+        useCasesComparator.getFuelsUseCase.invoke()
+            .map { fuels ->
+                setState(uiState.value.copy(
+                    isLoading = false,
+                    fuels = fuels,
+                    isFuelsReadyToCompare = true,
+                    isFuelsUpdated = true,
+                    firstFuelName = fuels.first().name,
+                    secondFuelName = fuels[1].name,
+                    firstFuelPrice = fuels.first().price,
+                    secondFuelPrice = fuels[1].price
+                ))
+            }
+            .catch {
+                setState(uiState.value.copy(isLoading = false, isError = true))
+                sendAction(ComparatorAction.ShowSnackBar(R.string.error_loading_fuels))
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun compareFuels(firstFuelPrice: Double, secondFuelPrice: Double) {
         Log.d(TAG, "compareFuels: ")
-        setState(currentViewState.copy(isLoading = true, isComparing = true))
+        setState(uiState.value.copy(isLoading = true, isComparing = true))
+
+        val firstFuel = uiState.value.fuels!!.first { it.name == uiState.value.firstFuelName }
+        val firstFuelUpdated = firstFuel.copy(price = firstFuelPrice)
+        val secondFuel = uiState.value.fuels!!.first { it.name == uiState.value.secondFuelName }
+        val secondFuelUpdated = secondFuel.copy(price = secondFuelPrice)
+
         viewModelScope.launch(Dispatchers.IO) {
             val comparisonResult = useCasesComparator.compareFuelsUseCase.invoke(
-                currentViewState.firstFuel!!, currentViewState.secondFuel!!
+                firstFuelUpdated, secondFuelUpdated
             )
-            if (comparisonResult.fuel == currentViewState.firstFuel!!) {
-                currentViewState.firstFuel?.color = android.R.color.holo_green_light
-                currentViewState.secondFuel?.color = android.R.color.holo_red_light
-            } else {
-                currentViewState.firstFuel?.color = android.R.color.holo_red_light
-                currentViewState.secondFuel?.color = android.R.color.holo_green_light
+
+            Log.d(TAG, "compareFuels: result ${comparisonResult}")
+
+            var firstFuelColor = android.R.color.holo_red_light
+            var secondFuelColor = android.R.color.holo_green_light
+
+            if (comparisonResult.fuel.name == firstFuel.name) {
+                firstFuelColor = android.R.color.holo_green_light
+                secondFuelColor = android.R.color.holo_red_light
             }
-            setState(currentViewState.copy(
+
+            setState(uiState.value.copy(
                 isLoading = false,
                 comparisonResult = comparisonResult,
+                isComparing = false,
+                isComparisonSaved = false,
+                isFuelsUpdated = false,
+                firstFuelColor = firstFuelColor,
+                secondFuelColor = secondFuelColor,
+                firstFuelPrice = firstFuelUpdated.price,
+                secondFuelPrice = secondFuelUpdated.price
             ))
         }
     }
 
-    private fun saveComparison() {
+    fun saveComparison() {
         Log.d(TAG, "saveComparison: ")
+        val firstFuel = uiState.value.fuels!!.first { it.name == uiState.value.firstFuelName }
+        val secondFuel = uiState.value.fuels!!.first { it.name == uiState.value.secondFuelName }
         viewModelScope.launch(Dispatchers.IO) {
             val isComparisonSaved = useCasesComparator.saveComparisonUseCase.invoke(
-                currentViewState.firstFuel!!, currentViewState.secondFuel!!
+                firstFuel, secondFuel
             )
+            setState(uiState.value.copy(
+                isLoading = false,
+                isComparisonSaved = isComparisonSaved,
+                isError = !isComparisonSaved
+            ))
+            sendAction(
+                ComparatorAction.ShowSnackBar(
+                    if (isComparisonSaved) R.string.comparison_saved else R.string.comparison_not_saved
+                )
+            )
+        }
+    }
 
-            if (isComparisonSaved) {
-                setState(currentViewState.copy(
-                    isLoading = false,
-                    isComparisonSaved = true,
-                    message = R.string.comparison_saved
-                ))
-            } else {
-                setState(currentViewState.copy(
-                    isLoading = false,
-                    isComparisonSaved = false,
-                    isError = true,
-                    message = R.string.comparison_not_saved
-                ))
-            }
+    fun snackBarRendered() {
+        setState(uiState.value.copy(isComparisonSaved = false))
+    }
+
+    fun spinnerRendered() {
+        setState(uiState.value.copy(isFuelsReadyToCompare = true, isFuelsUpdated = false))
+    }
+
+    fun incrementDecrementFuelPrice(isFirstFuel: Boolean, isIncrement: Boolean) {
+        Log.d(TAG, "incrementDecrementFuelPrice: isFirstFuel $isFirstFuel, isIncrement $isIncrement")
+        if (isFirstFuel) {
+            setState(uiState.value.copy(firstFuelPrice = updateFuelPrice(uiState.value.firstFuelPrice, isIncrement)))
+        } else {
+            setState(uiState.value.copy(secondFuelPrice = updateFuelPrice(uiState.value.secondFuelPrice, isIncrement)))
+        }
+    }
+
+    private fun updateFuelPrice(fuelPrice: Double, isIncrement: Boolean): Double {
+        var fuelPriceUpdated = fuelPrice
+        if (isIncrement) {
+            fuelPriceUpdated += INCREMENT_VALUE
+        } else {
+            fuelPriceUpdated -= INCREMENT_VALUE
+        }
+        fuelPriceUpdated = String.format(Locale.getDefault(),"%.2f", fuelPriceUpdated).toDouble()
+        return fuelPriceUpdated
+    }
+
+    fun fuelSelected(position: Int, isFirstFuel: Boolean) {
+        val fuel = uiState.value.fuels?.get(position)
+        if (isFirstFuel) {
+            setState(uiState.value.copy(
+                firstFuelName = fuel!!.name,
+                firstFuelPrice = fuel.price
+            ))
+        } else {
+            setState(uiState.value.copy(
+                secondFuelName = fuel!!.name,
+                secondFuelPrice = fuel.price
+            ))
         }
     }
 
@@ -173,7 +186,7 @@ class ComparatorViewModel(
             initializer {
                 val fuelRepository: FuelRepository = FuelRepositoryImpl()
                 val historyRepository: HistoryRepository = HistoryRepositoryImpl()
-                val compareFuelsUseCase = CompareFuelsUseCase(fuelRepository)
+                val compareFuelsUseCase = CompareFuelsUseCase()
                 val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
                 val saveComparisonUseCase = SaveComparisonUseCase(historyRepository)
                 val useCasesComparator = UseCasesComparator(compareFuelsUseCase, getFuelsUseCase, saveComparisonUseCase)

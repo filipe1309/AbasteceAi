@@ -2,16 +2,12 @@ package com.filipe1309.abasteceai.features.comparator.domain.usecase
 
 import com.filipe1309.abasteceai.features.comparator.domain.entity.ComparisonResult
 import com.filipe1309.abasteceai.features.comparator.domain.entity.Fuel
-import com.filipe1309.abasteceai.features.comparator.domain.repository.FuelRepository
 
-class CompareFuelsUseCase(private val repository: FuelRepository) {
-    suspend fun invoke(fuel1: Fuel, fuel2: Fuel): ComparisonResult {
-        val fuel1Data = repository.getFuel(fuel1)
-        val fuel2Data = repository.getFuel(fuel2)
-
+class CompareFuelsUseCase {
+    fun invoke(fuel1: Fuel, fuel2: Fuel): ComparisonResult {
         // Explain: (price / efficiency) = cost per unit distance (ex R$/km)
-        val fuel1CostPerUnitDistance = fuel1.price / fuel1Data.efficiency
-        val fuel2CostPerUnitDistance = fuel2.price / fuel2Data.efficiency
+        val fuel1CostPerUnitDistance = fuel1.price / fuel1.efficiency
+        val fuel2CostPerUnitDistance = fuel2.price / fuel2.efficiency
 
         return if (fuel1CostPerUnitDistance < fuel2CostPerUnitDistance) {
             ComparisonResult(fuel1, fuel1CostPerUnitDistance)

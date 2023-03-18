@@ -56,11 +56,11 @@
                         android:background="@drawable/custom_btn_add"
                         android:backgroundTint="#C5BCBC"
                         app:cornerRadius="30dp"
-                        app:layout_constraintStart_toEndOf="@id/first_fuel_value"
-                        app:layout_constraintTop_toTopOf="@id/first_fuel_value" />
+                        app:layout_constraintStart_toEndOf="@id/first_fuel_price"
+                        app:layout_constraintTop_toTopOf="@id/first_fuel_price" />
 
                     <EditText
-                        android:id="@+id/first_fuel_value"
+                        android:id="@+id/first_fuel_price"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
@@ -71,7 +71,6 @@
                         android:hint="@string/value"
                         android:inputType="numberDecimal"
                         android:autofillHints="fuelPrice"
-                        android:text="@={``+ viewModel.viewState.firstFuel.price}"
                         app:layout_constraintTop_toBottomOf="@id/spinner_first_fuel"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -83,8 +82,8 @@
                         android:background="@drawable/custom_btn_remove"
                         android:backgroundTint="#C5BCBC"
                         app:cornerRadius="30dp"
-                        app:layout_constraintStart_toEndOf="@id/first_fuel_value"
-                        app:layout_constraintBottom_toBottomOf="@id/first_fuel_value" />
+                        app:layout_constraintStart_toEndOf="@id/first_fuel_price"
+                        app:layout_constraintBottom_toBottomOf="@id/first_fuel_price" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
@@ -130,11 +129,11 @@
                         android:background="@drawable/custom_btn_add"
                         android:backgroundTint="#C5BCBC"
                         app:cornerRadius="30dp"
-                        app:layout_constraintStart_toEndOf="@id/second_fuel_value"
-                        app:layout_constraintTop_toTopOf="@id/second_fuel_value" />
+                        app:layout_constraintStart_toEndOf="@id/second_fuel_price"
+                        app:layout_constraintTop_toTopOf="@id/second_fuel_price" />
 
                     <EditText
-                        android:id="@+id/second_fuel_value"
+                        android:id="@+id/second_fuel_price"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp"
@@ -145,7 +144,6 @@
                         android:hint="@string/value"
                         android:inputType="numberDecimal"
                         android:autofillHints="fuelPrice"
-                        android:text="@={`` + viewModel.viewState.secondFuel.price}"
                         app:layout_constraintTop_toBottomOf="@id/spinner_second_fuel"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -157,8 +155,8 @@
                         android:background="@drawable/custom_btn_remove"
                         android:backgroundTint="#C5BCBC"
                         app:cornerRadius="30dp"
-                        app:layout_constraintStart_toEndOf="@id/second_fuel_value"
-                        app:layout_constraintBottom_toBottomOf="@id/second_fuel_value" />
+                        app:layout_constraintStart_toEndOf="@id/second_fuel_price"
+                        app:layout_constraintBottom_toBottomOf="@id/second_fuel_price" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

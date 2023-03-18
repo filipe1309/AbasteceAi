@@ -6,7 +6,8 @@
         android:name=".presentation.ComparatorApp"
         android:theme="@style/Theme.AbasteceAi">
         <activity android:name="com.filipe1309.abasteceai.features.comparator.presentation.ComparatorActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.filipe1309.abasteceai.features.comparator.open" />
                 <category android:name="android.intent.category.DEFAULT" />
