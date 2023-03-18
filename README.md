@@ -37,6 +37,14 @@ This project was developed to help people decide which fuel to use in their vehi
 
 ## :building_construction: Architecture
 
+### Wireframe flow
+
+[![wireframe flow image](docs/app_wireframe_flow.jpg)](docs/app_wireframe_flow.jpg)
+
+### Use Case Diagram
+
+[![use case diagram image](docs/app_use_cases.png)](docs/app_use_cases.png)
+
 ### :package: Modules
 
 [![modules image](docs/project.dot.png)](docs/project.dot.png)
@@ -89,7 +97,7 @@ cd AbasteceAi
 - https://developer.android.com/develop/ui/views/components/floating-action-button
 - https://www.youtube.com/watch?v=Qxj2eBmXLHg
 - https://developer.android.com/topic/libraries/architecture/viewmodel/viewmodel-factories
-
+- https://www.youtube.com/watch?v=6Jc6-INantQ
 
 <!-- ## :white_check_mark: Tests
 
