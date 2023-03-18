@@ -49,6 +49,16 @@ This project was developed to help people decide which fuel to use in their vehi
 
 [![modules image](docs/project.dot.png)](docs/project.dot.png)
 
+### ViewIntent
+
+```mermaid
+graph TD
+    Activity/Fragment --> |"dispatchViewIntent(ViewIntent)"| ViewModel
+    ViewModel -.-> |"setState(State)"| Activity/Fragment
+    ViewModel -.-> |"sendAction(Action)"| Activity/Fragment
+
+```
+
 ## :scroll: Requirements
 
 - [Android Studio](https://developer.android.com/studio)
@@ -98,6 +108,7 @@ cd AbasteceAi
 - https://www.youtube.com/watch?v=Qxj2eBmXLHg
 - https://developer.android.com/topic/libraries/architecture/viewmodel/viewmodel-factories
 - https://www.youtube.com/watch?v=6Jc6-INantQ
+- https://medium.com/swlh/mvi-architecture-with-android-fcde123e3c4a
 
 <!-- ## :white_check_mark: Tests
 
