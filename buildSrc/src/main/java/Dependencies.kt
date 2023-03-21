@@ -26,6 +26,7 @@ object Versions {
     const val junit = "4.13.2"
     const val androidx_test_ext_junit = "1.1.5"
     const val androidx_espresso_core = "3.5.1"
+    const val androidx_room = "2.5.0"
 }
 
 @Suppress("unused")
@@ -50,6 +51,11 @@ object Deps {
     // Navigation
     const val androidx_nav_fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.androidx_nav}"
     const val androidx_nav_ui = "androidx.navigation:navigation-ui-ktx:${Versions.androidx_nav}"
+
+    // Room
+    const val androidx_room_runtime = "androidx.room:room-runtime:${Versions.androidx_room}"
+    const val androidx_room_ktx = "androidx.room:room-ktx:${Versions.androidx_room}"
+    const val androidx_room_compiler = "androidx.room:room-compiler:${Versions.androidx_room}"
 
     // Tests
     const val junit = "junit:junit:${Versions.junit}"
