@@ -26,7 +26,7 @@ private const val TAG = "ComparatorFragment"
 class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: FragmentComparatorBinding
-    private val viewModel: ComparatorViewModel by viewModels {ComparatorViewModel.Factory}
+    private val viewModel: ComparatorViewModel by viewModels {ComparatorViewModelFactory(requireContext())}
     private lateinit var arrayAdapter: ArrayAdapter<String>
 
     override fun onCreateView(

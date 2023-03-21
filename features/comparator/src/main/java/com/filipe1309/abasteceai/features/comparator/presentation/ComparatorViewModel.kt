@@ -2,15 +2,8 @@ package com.filipe1309.abasteceai.features.comparator.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.filipe1309.abasteceai.features.comparator.R
-import com.filipe1309.abasteceai.features.comparator.data.repository.FuelRepositoryImpl
-import com.filipe1309.abasteceai.features.comparator.data.repository.HistoryRepositoryImpl
-import com.filipe1309.abasteceai.features.comparator.domain.repository.FuelRepository
-import com.filipe1309.abasteceai.features.comparator.domain.repository.HistoryRepository
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuelsUseCase
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.SaveComparisonUseCase
@@ -118,6 +111,7 @@ class ComparatorViewModel(
         Log.d(TAG, "getFuels: ")
         useCasesComparator.getFuelsUseCase.invoke()
             .map { fuels ->
+                Log.d(TAG, "getFuels: $fuels")
                 setState(uiState.value.copy(
                     isLoading = false,
                     fuels = fuels,
@@ -220,23 +214,6 @@ class ComparatorViewModel(
                 secondFuelName = fuel!!.name,
                 secondFuelPrice = fuel.price
             ))
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val fuelRepository: FuelRepository = FuelRepositoryImpl()
-                val historyRepository: HistoryRepository = HistoryRepositoryImpl()
-                val compareFuelsUseCase = CompareFuelsUseCase()
-                val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
-                val saveComparisonUseCase = SaveComparisonUseCase(historyRepository)
-                val useCasesComparator = UseCasesComparator(compareFuelsUseCase, getFuelsUseCase, saveComparisonUseCase)
-
-                ComparatorViewModel(
-                    useCasesComparator = useCasesComparator
-                )
-            }
         }
     }
 }

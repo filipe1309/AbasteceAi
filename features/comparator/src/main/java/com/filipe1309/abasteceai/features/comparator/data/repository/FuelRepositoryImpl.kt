@@ -1,56 +1,15 @@
 package com.filipe1309.abasteceai.features.comparator.data.repository
 
-import com.filipe1309.abasteceai.features.comparator.domain.entity.Fuel
+import com.filipe1309.abasteceai.features.comparator.data.repository.datasource.FuelLocalDataSource
 import com.filipe1309.abasteceai.features.comparator.domain.repository.FuelRepository
+import com.filipe1309.abasteceai.libraries.database.model.Fuel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.filipe1309.abasteceai.features.comparator.domain.entity.Fuel as FuelDomain
 
-class FuelRepositoryImpl: FuelRepository {
-    override suspend fun getFuel(fuel: Fuel): Fuel {
-        if (fuel.id == 1) {
-            return Fuel(
-                    id = 1,
-                    name = "Gasolina",
-                    price = 5.00,
-                    efficiency = 10.0,
-                    efficiencyUnit = "km/l"
-                )
-        } else {
-            return Fuel(
-                id = 2,
-                name = "Etanol",
-                price = 3.50,
-                efficiency = 7.0,
-                efficiencyUnit = "km/l"
-            )
-        }
-    }
+class FuelRepositoryImpl(
+    private val fuelLocalDataSource: FuelLocalDataSource
+): FuelRepository {
+    override suspend fun getFuel(fuel: Fuel): FuelDomain = fuelLocalDataSource.getFuel(fuel.id).toDomain()
 
-    override suspend fun getFuels(): Flow<List<Fuel>> = flow {
-        emit(listOf(
-            Fuel(
-                id = 1,
-                name = "Gasolina",
-                price = 5.00,
-                efficiency = 10.0,
-                efficiencyUnit = "km/l"
-            ),
-            Fuel(
-                id = 2,
-                name = "Etanol",
-                price = 3.50,
-                efficiency = 7.0,
-                efficiencyUnit = "km/l"
-            ),
-            Fuel(
-                id = 3,
-                name = "Diesel",
-                price = 4.00,
-                efficiency = 8.0,
-                efficiencyUnit = "km/l"
-            )
-        ))
-    }
-
-
+    override suspend fun getFuels(): Flow<List<FuelDomain>> = fuelLocalDataSource.getAllFuels().toDomain()
 }

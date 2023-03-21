@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation project(':libraries:actions')
     implementation project(':libraries:ui-components')
+    implementation project(':libraries:database')
 
     implementation Deps.androidx_core
     implementation Deps.androidx_support_lib
