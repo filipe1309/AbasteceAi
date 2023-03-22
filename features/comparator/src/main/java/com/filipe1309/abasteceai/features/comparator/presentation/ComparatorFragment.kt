@@ -1,5 +1,9 @@
 package com.filipe1309.abasteceai.features.comparator.presentation
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -8,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -17,17 +22,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.filipe1309.abasteceai.features.comparator.R
 import com.filipe1309.abasteceai.features.comparator.databinding.FragmentComparatorBinding
+import com.filipe1309.abasteceai.features.comparator.domain.entity.Location
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
-private const val TAG = "ComparatorFragment"
 
 class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: FragmentComparatorBinding
     private val viewModel: ComparatorViewModel by viewModels {ComparatorViewModelFactory(requireContext())}
     private lateinit var arrayAdapter: ArrayAdapter<String>
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +44,14 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         setupSpinners()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        if (hasPermissions(requireContext(), PERMISSIONS)) {
+            Log.d(TAG, "onCreateView: hasPermissions")
+            getLastLocation()
+        } else {
+            Log.d(TAG, "onCreateView: requestPermissions")
+            requestPermissionsLauncher.launch(PERMISSIONS)
+        }
         return binding.root
     }
 
@@ -216,5 +231,43 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onNothingSelected(adapterView: AdapterView<*>?) {
         adapterView?.tooltipText = "Select a fuel"
+    }
+
+    private val requestPermissionsLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val granted = permissions.entries.all {
+                it.value == true
+            }
+            if (granted) {
+                Log.d(TAG, "onCreateView: permissions granted")
+                getLastLocation()
+            }
+        }
+
+    @SuppressLint("MissingPermission")
+    fun getLastLocation() {
+        if (hasPermissions(requireContext(), PERMISSIONS)) {
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    Log.d(TAG, "Location: ${location.latitude}, ${location.longitude}")
+
+                    viewModel.dispatchViewIntent(
+                        ComparatorViewIntent.OnLocationReceived(Location(location.latitude, location.longitude))
+                    )
+                }
+            }
+        }
+    }
+
+    private fun hasPermissions(context: Context, permissions: Array<String>): Boolean = permissions.all {
+        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    companion object {
+        val TAG: String = ComparatorFragment::class.java.simpleName
+        var PERMISSIONS = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        )
     }
 }

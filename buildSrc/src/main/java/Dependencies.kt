@@ -27,6 +27,8 @@ object Versions {
     const val androidx_test_ext_junit = "1.1.5"
     const val androidx_espresso_core = "3.5.1"
     const val androidx_room = "2.5.0"
+    const val gson = "2.8.9"
+    const val play_services_location = "21.0.1"
 }
 
 @Suppress("unused")
@@ -37,6 +39,9 @@ object Deps {
     const val androidx_support_lib = "androidx.appcompat:appcompat:${Versions.androidx_support_lib}"
     const val android_material_design = "com.google.android.material:material:${Versions.android_material_design}"
     const val androidx_constraint_layout = "androidx.constraintlayout:constraintlayout:${Versions.androidx_const_lyt}"
+
+    // Play Services
+    const val play_services_location = "com.google.android.gms:play-services-location:${Versions.play_services_location}"
 
     // ViewModel
     const val androidx_viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
@@ -56,6 +61,9 @@ object Deps {
     const val androidx_room_runtime = "androidx.room:room-runtime:${Versions.androidx_room}"
     const val androidx_room_ktx = "androidx.room:room-ktx:${Versions.androidx_room}"
     const val androidx_room_compiler = "androidx.room:room-compiler:${Versions.androidx_room}"
+
+    // Gson
+    const val gson = "com.google.code.gson:gson:${Versions.gson}"
 
     // Tests
     const val junit = "junit:junit:${Versions.junit}"

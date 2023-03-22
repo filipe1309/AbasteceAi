@@ -1,11 +1,9 @@
 package com.filipe1309.abasteceai.libraries.database.model
 
-import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
-
+import java.util.Date
 
 @Entity(tableName = "histories")
 data class History(
@@ -26,5 +24,6 @@ data class History(
     @ColumnInfo(name = "timestamp")
     val date: Date? = Date(),
     @ColumnInfo(name = "geolocation")
-    val location: Location? = null
+    val location: Any? = null
 )
+

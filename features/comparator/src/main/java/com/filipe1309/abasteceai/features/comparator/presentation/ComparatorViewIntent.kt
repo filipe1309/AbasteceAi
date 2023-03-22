@@ -1,5 +1,7 @@
 package com.filipe1309.abasteceai.features.comparator.presentation
 
+import com.filipe1309.abasteceai.features.comparator.domain.entity.Location
+
 sealed class ComparatorViewIntent {
     object OnSpinnerRendered : ComparatorViewIntent()
     object OnSnackBarRendered : ComparatorViewIntent()
@@ -8,4 +10,5 @@ sealed class ComparatorViewIntent {
     data class OnAddFuelClicked(val isfirstFuel: Boolean, val isLong: Boolean) : ComparatorViewIntent()
     data class OnSubtractFuelClicked(val isfirstFuel: Boolean, val isLong: Boolean) : ComparatorViewIntent()
     data class OnFuelSelected(val isfirstFuel: Boolean, val position: Int) : ComparatorViewIntent()
+    data class OnLocationReceived(val location: Location) : ComparatorViewIntent()
 }

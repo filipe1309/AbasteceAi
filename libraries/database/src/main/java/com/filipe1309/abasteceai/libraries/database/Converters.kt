@@ -4,7 +4,7 @@ import android.location.Location
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
-import java.util.*
+import java.util.Date
 
 class Converters {
     @TypeConverter
@@ -27,7 +27,8 @@ class Converters {
     }
 
     @TypeConverter
-    fun toLocationString(location: Location?): String? {
-        return Gson().toJson(location)
+    fun toLocationString(location: Any?): String {
+        return Gson().toJson(location).toString()
     }
 }
+

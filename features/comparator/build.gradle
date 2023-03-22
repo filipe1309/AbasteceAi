@@ -17,6 +17,9 @@ dependencies {
     implementation Deps.android_material_design
     implementation Deps.androidx_constraint_layout
 
+    // Play Services
+    implementation Deps.play_services_location
+
     // ViewModel
     implementation Deps.androidx_viewmodel
 

@@ -22,6 +22,9 @@ dependencies {
     ksp(Deps.androidx_room_compiler)
     implementation(Deps.androidx_room_ktx)
 
+    // Gson
+    implementation(Deps.gson)
+
     // Tests
     testImplementation(Deps.junit)
 }

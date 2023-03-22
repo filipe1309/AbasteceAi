@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 import kotlin.math.absoluteValue
 
 private const val TAG = "ComparatorViewModel"
@@ -42,7 +42,6 @@ class ComparatorViewModel(
     private val _action = MutableSharedFlow<ComparatorAction>()
     val action: SharedFlow<ComparatorAction> =_action.asSharedFlow()
 
-
     init {
         setState(ComparatorViewState(isLoading = true))
         viewModelScope.launch(Dispatchers.IO) {
@@ -59,6 +58,7 @@ class ComparatorViewModel(
             is ComparatorViewIntent.OnFuelTyped -> onFuelTyped(viewIntent)
             is ComparatorViewIntent.OnAddFuelClicked -> onAddFuelClicked(viewIntent)
             is ComparatorViewIntent.OnSubtractFuelClicked -> onSubtractFuelClicked(viewIntent)
+            is ComparatorViewIntent.OnLocationReceived -> onLocationReceived(viewIntent)
         }
     }
 
@@ -113,6 +113,11 @@ class ComparatorViewModel(
                 secondFuelPrice = updateFuelPrice(-uiState.value.secondFuelPrice, viewIntent.isLong)
             ))
         }
+    }
+
+    private fun onLocationReceived(viewIntent: ComparatorViewIntent.OnLocationReceived) {
+        Log.d(TAG, "onLocationPermissionGranted: ${viewIntent.location}")
+        setState(uiState.value.copy(location = viewIntent.location))
     }
 
     private suspend fun getFuels() {
@@ -183,7 +188,8 @@ class ComparatorViewModel(
         Log.d(TAG, "saveComparison: $firstFuelUpdated $secondFuelUpdated")
         viewModelScope.launch(Dispatchers.IO) {
             val isComparisonSaved = useCasesComparator.saveComparisonUseCase.invoke(
-                firstFuelUpdated, secondFuelUpdated
+                firstFuelUpdated, secondFuelUpdated,
+                uiState.value.location
             )
             setState(uiState.value.copy(
                 isLoading = false,
