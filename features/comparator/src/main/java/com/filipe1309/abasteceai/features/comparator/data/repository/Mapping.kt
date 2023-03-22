@@ -15,6 +15,18 @@ internal fun Fuel.toDomain(): FuelDomain {
     )
 }
 
+internal fun FuelDomain.toData(): Fuel {
+    return Fuel(
+        id = this.id ?: 0,
+        name = this.name,
+        price = this.price,
+        efficiency = this.efficiency,
+        efficiencyUnit = this.efficiencyUnit
+    )
+}
+
+
+
 internal fun Flow<List<Fuel>>.toDomain(): Flow<List<FuelDomain>> {
     return this.map { list ->
         list.map { it.toDomain() }

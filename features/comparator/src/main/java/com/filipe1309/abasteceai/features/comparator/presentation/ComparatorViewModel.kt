@@ -8,7 +8,15 @@ import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuels
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.GetFuelsUseCase
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.SaveComparisonUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.absoluteValue
@@ -167,12 +175,15 @@ class ComparatorViewModel(
     }
 
     private fun saveComparison() {
-        Log.d(TAG, "saveComparison: ")
         val firstFuel = uiState.value.fuels!!.first { it.name == uiState.value.firstFuelName }
+        val firstFuelUpdated = firstFuel.copy(price = uiState.value.firstFuelPrice)
         val secondFuel = uiState.value.fuels!!.first { it.name == uiState.value.secondFuelName }
+        val secondFuelUpdated = secondFuel.copy(price = uiState.value.secondFuelPrice)
+
+        Log.d(TAG, "saveComparison: $firstFuelUpdated $secondFuelUpdated")
         viewModelScope.launch(Dispatchers.IO) {
             val isComparisonSaved = useCasesComparator.saveComparisonUseCase.invoke(
-                firstFuel, secondFuel
+                firstFuelUpdated, secondFuelUpdated
             )
             setState(uiState.value.copy(
                 isLoading = false,

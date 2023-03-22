@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.filipe1309.abasteceai.features.comparator.data.repository.FuelRepositoryImpl
 import com.filipe1309.abasteceai.features.comparator.data.repository.HistoryRepositoryImpl
 import com.filipe1309.abasteceai.features.comparator.data.repository.datasource.FuelLocalDataSourceImpl
+import com.filipe1309.abasteceai.features.comparator.data.repository.datasource.HistoryLocalDataSourceImpl
 import com.filipe1309.abasteceai.features.comparator.domain.repository.FuelRepository
 import com.filipe1309.abasteceai.features.comparator.domain.repository.HistoryRepository
 import com.filipe1309.abasteceai.features.comparator.domain.usecase.CompareFuelsUseCase
@@ -21,10 +22,12 @@ class ComparatorViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         Log.d("ViewModelFactory", "create: ")
         val db = AppDatabase.getInstance(context)
-        val dao = db.fuelDAO
-        val fuelLocalDataSource = FuelLocalDataSourceImpl(dao)
+        val fuelDao = db.fuelDAO
+        val historyDAO = db.historyDAO
+        val fuelLocalDataSource = FuelLocalDataSourceImpl(fuelDao)
         val fuelRepository: FuelRepository = FuelRepositoryImpl(fuelLocalDataSource)
-        val historyRepository: HistoryRepository = HistoryRepositoryImpl()
+        val historyLocalDataSource = HistoryLocalDataSourceImpl(historyDAO)
+        val historyRepository: HistoryRepository = HistoryRepositoryImpl(historyLocalDataSource)
         val compareFuelsUseCase = CompareFuelsUseCase()
         val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
         val saveComparisonUseCase = SaveComparisonUseCase(historyRepository)
