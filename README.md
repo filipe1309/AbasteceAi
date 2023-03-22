@@ -110,6 +110,15 @@ cd AbasteceAi
 - https://www.youtube.com/watch?v=6Jc6-INantQ
 - https://medium.com/swlh/mvi-architecture-with-android-fcde123e3c4a
 - https://iamjegul.medium.com/android-database-in-multi-module-project-35513c8621ce
+- https://betterprogramming.pub/how-to-use-ksp-on-android-f7df3a87d05e
+- https://github.com/google/ksp
+- https://developer.android.com/jetpack/androidx/releases/room
+- https://developer.android.com/training/data-storage/room/prepopulate
+- https://stackoverflow.com/questions/53152796/androidx-room-unresolved-supertypes-roomdatabase
+- https://developer.android.com/training/data-storage/room/async-queries
+- https://developer.android.com/training/data-storage/room/referencing-data
+- https://medium.com/androiddevelopers/packing-the-room-pre-populate-your-database-with-this-one-method-333ae190e680
+- https://www.youtube.com/watch?v=pe28WeQ0VCc
 
 <!-- ## :white_check_mark: Tests
 
