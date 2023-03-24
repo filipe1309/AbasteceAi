@@ -52,13 +52,6 @@ This project was developed to help people decide which fuel to use in their vehi
 
 ### :package: Modules by feature & by layer
 
-### v1 - by feature
-
-[![modules image](docs/project.dot.png)](docs/project.dot.png)
-
-
-### v2 - by feature & by layer (current)
-
 ```mermaid
 flowchart TD
     APP[:app] -->|init| UI_COMPARATOR(:ui:comparator)
