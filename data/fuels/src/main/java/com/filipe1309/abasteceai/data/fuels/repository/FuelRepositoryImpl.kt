@@ -11,4 +11,5 @@ class FuelRepositoryImpl(
     override suspend fun getFuel(fuel: Fuel): Fuel = fuelLocalDataSource.getFuel(fuel.id!!).toDomain()
 
     override suspend fun getFuels(): Flow<List<Fuel>> = fuelLocalDataSource.getAllFuels().toDomain()
+    override suspend fun updateFuels(vararg fuels: Fuel) = fuelLocalDataSource.updateFuels(*fuels.toData())
 }

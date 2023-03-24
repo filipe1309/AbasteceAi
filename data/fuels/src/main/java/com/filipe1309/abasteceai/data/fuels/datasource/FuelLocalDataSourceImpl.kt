@@ -14,4 +14,8 @@ class FuelLocalDataSourceImpl(
     override fun getAllFuels(): Flow<List<Fuel>> {
         return fuelDAO.getAllFuels()
     }
+
+    override suspend fun updateFuels(vararg fuels: Fuel) {
+        fuelDAO.updateFuels(*fuels)
+    }
 }

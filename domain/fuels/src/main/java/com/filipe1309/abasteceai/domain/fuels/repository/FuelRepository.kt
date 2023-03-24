@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface FuelRepository {
     suspend fun getFuel(fuel: Fuel): Fuel
     suspend fun getFuels(): Flow<List<Fuel>>
+    suspend fun updateFuels(vararg fuels: Fuel)
 }

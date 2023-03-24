@@ -156,6 +156,7 @@ cd AbasteceAi
 - [Pre-Populate ROOM Database with Already Loaded Data | Android Studio Tutorial](https://www.youtube.com/watch?v=pe28WeQ0VCc)
 - [By layer or feature? Why not both?! Guide to Android app modularization](https://www.youtube.com/watch?v=16SwTvzDO0A)
 - [MermaidJS](https://mermaid.js.org/syntax/flowchart.html)
+- [Mermaid Live Editor](https://mermaid.live/)
 
 <!-- ## :white_check_mark: Tests
 

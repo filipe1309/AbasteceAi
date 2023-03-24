@@ -11,6 +11,7 @@ import com.filipe1309.abasteceai.data.histories.repository.HistoryRepositoryImpl
 import com.filipe1309.abasteceai.domain.comparator.usecase.CompareFuelsUseCase
 import com.filipe1309.abasteceai.domain.fuels.repository.FuelRepository
 import com.filipe1309.abasteceai.domain.fuels.usecase.GetFuelsUseCase
+import com.filipe1309.abasteceai.domain.fuels.usecase.UpdateFuelsUseCase
 import com.filipe1309.abasteceai.domain.histories.repository.HistoryRepository
 import com.filipe1309.abasteceai.domain.histories.usecase.SaveComparisonUseCase
 import com.filipe1309.abasteceai.libraries.database.AppDatabase
@@ -31,8 +32,14 @@ class ComparatorViewModelFactory(
         val historyRepository: HistoryRepository = HistoryRepositoryImpl(historyLocalDataSource)
         val compareFuelsUseCase = CompareFuelsUseCase()
         val getFuelsUseCase = GetFuelsUseCase(fuelRepository)
+        val updateFuelsUseCase = UpdateFuelsUseCase(fuelRepository)
         val saveComparisonUseCase = SaveComparisonUseCase(historyRepository)
-        val useCasesComparator = UseCasesComparator(compareFuelsUseCase, getFuelsUseCase, saveComparisonUseCase)
+        val useCasesComparator = UseCasesComparator(
+            compareFuelsUseCase,
+            getFuelsUseCase,
+            saveComparisonUseCase,
+            updateFuelsUseCase
+        )
         @Suppress("UNCHECKED_CAST")
         return ComparatorViewModel(useCasesComparator) as T
     }

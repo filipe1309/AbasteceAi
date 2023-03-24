@@ -4,6 +4,6 @@ import com.filipe1309.abasteceai.domain.histories.entity.History
 import com.filipe1309.abasteceai.domain.histories.repository.HistoryRepository
 
 class SaveComparisonUseCase(private val repository: HistoryRepository) {
-    suspend fun invoke(history: History): Boolean =
+    suspend operator fun invoke(history: History): Boolean =
         repository.saveComparison(history)
 }

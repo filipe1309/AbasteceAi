@@ -3,7 +3,7 @@ package com.filipe1309.abasteceai.domain.comparator.usecase
 import com.filipe1309.abasteceai.domain.comparator.entity.ComparisonResult
 
 class CompareFuelsUseCase {
-    fun invoke(
+    operator fun invoke(
         fuel1Price: Double, fuel1Efficiency: Double,
         fuel2Price: Double, fuel2Efficiency: Double
     ): ComparisonResult {

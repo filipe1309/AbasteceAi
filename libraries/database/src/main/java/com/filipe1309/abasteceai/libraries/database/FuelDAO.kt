@@ -3,6 +3,7 @@ package com.filipe1309.abasteceai.libraries.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.filipe1309.abasteceai.libraries.database.model.Fuel
 import kotlinx.coroutines.flow.Flow
 
@@ -16,4 +17,7 @@ interface FuelDAO {
 
     @Insert
     suspend fun insertFuel(fuel: Fuel): Long
+
+    @Update
+    suspend fun updateFuels(vararg fuels: Fuel)
 }

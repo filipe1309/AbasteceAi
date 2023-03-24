@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.filipe1309.abasteceai.domain.comparator.usecase.CompareFuelsUseCase
 import com.filipe1309.abasteceai.domain.fuels.usecase.GetFuelsUseCase
+import com.filipe1309.abasteceai.domain.fuels.usecase.UpdateFuelsUseCase
 import com.filipe1309.abasteceai.domain.histories.entity.History
 import com.filipe1309.abasteceai.domain.histories.usecase.SaveComparisonUseCase
 import kotlinx.coroutines.Dispatchers
@@ -27,11 +28,12 @@ private const val TAG = "ComparatorViewModel"
 data class UseCasesComparator(
     val compareFuelsUseCase: CompareFuelsUseCase,
     val getFuelsUseCase: GetFuelsUseCase,
-    val saveComparisonUseCase: SaveComparisonUseCase
+    val saveComparisonUseCase: SaveComparisonUseCase,
+    val updateFuelsUseCase: UpdateFuelsUseCase,
 )
 
 private const val INCREMENT_VALUE = 0.01
-private const val INCREMENT_LONG_VALUE = 0.1
+private const val INCREMENT_LONG_VALUE = INCREMENT_VALUE * 10
 
 class ComparatorViewModel(
     private val useCasesComparator: UseCasesComparator,
@@ -56,7 +58,7 @@ class ComparatorViewModel(
             is ComparatorViewIntent.OnSpinnerRendered -> onSpinnerRendered()
             is ComparatorViewIntent.OnSnackBarRendered -> onSnackBarRendered()
             is ComparatorViewIntent.OnSaveClicked -> onSaveClicked()
-            is ComparatorViewIntent.OnFuelTyped -> onFuelTyped(viewIntent)
+            is ComparatorViewIntent.OnFuelChanged -> onFuelTyped(viewIntent)
             is ComparatorViewIntent.OnAddFuelClicked -> onAddFuelClicked(viewIntent)
             is ComparatorViewIntent.OnSubtractFuelClicked -> onSubtractFuelClicked(viewIntent)
             is ComparatorViewIntent.OnLocationReceived -> onLocationReceived(viewIntent)
@@ -78,10 +80,24 @@ class ComparatorViewModel(
         fuelSelected(viewIntent.isfirstFuel, viewIntent.position)
     }
 
-    private fun onFuelTyped(viewIntent: ComparatorViewIntent.OnFuelTyped) {
+    private fun onFuelTyped(viewIntent: ComparatorViewIntent.OnFuelChanged) {
         Log.d(TAG, "nnFuelTyped: $viewIntent")
         setState(uiState.value.copy(isLoading = true, isComparing = true))
+        updateFuels(viewIntent.firstFuelPrice, viewIntent.secondFuelPrice)
         compareFuels(viewIntent.firstFuelPrice, viewIntent.secondFuelPrice)
+    }
+
+    private fun updateFuels(fuel1Price: Double, fuel2Price: Double) {
+        // TODO: Refactor this, include first & second fuels objects in the viewState
+        val firstFuel = uiState.value.fuels!!.first { it.name == uiState.value.firstFuelName }
+        val secondFuel = uiState.value.fuels!!.first { it.name == uiState.value.secondFuelName }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            useCasesComparator.updateFuelsUseCase(
+                firstFuel.copy(price = fuel1Price),
+                secondFuel.copy(price = fuel2Price)
+            )
+        }
     }
 
     private fun onSaveClicked() {
@@ -123,7 +139,7 @@ class ComparatorViewModel(
 
     private suspend fun getFuels() {
         Log.d(TAG, "getFuels: ")
-        useCasesComparator.getFuelsUseCase.invoke()
+        useCasesComparator.getFuelsUseCase()
             .map { fuels ->
                 Log.d(TAG, "getFuels: $fuels")
                 setState(uiState.value.copy(
@@ -150,7 +166,7 @@ class ComparatorViewModel(
         val secondFuel = uiState.value.fuels!!.first { it.name == uiState.value.secondFuelName }
 
         viewModelScope.launch(Dispatchers.IO) {
-            val comparisonResult = useCasesComparator.compareFuelsUseCase.invoke(
+            val comparisonResult = useCasesComparator.compareFuelsUseCase(
                 fuel1Price = firstFuelPrice, fuel1Efficiency = firstFuel.efficiency,
                 fuel2Price = secondFuelPrice, fuel2Efficiency = secondFuel.efficiency
             )
@@ -195,7 +211,8 @@ class ComparatorViewModel(
             )
             Log.d(TAG, "saveComparison: $history")
 
-            val isComparisonSaved = useCasesComparator.saveComparisonUseCase.invoke(history)
+            val isComparisonSaved = useCasesComparator.saveComparisonUseCase(history)
+
             setState(uiState.value.copy(
                 isLoading = false,
                 isComparisonSaved = isComparisonSaved,

@@ -79,7 +79,7 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
             Log.d(TAG, "firstFuelPrice.doAfterTextChanged firstFuelValue: $it")
             Log.d(TAG, "firstFuelPrice.doAfterTextChanged secondFuelValue: ${binding.secondFuelPrice.text}")
             if (binding.secondFuelPrice.text.isNotEmpty())
-                viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelTyped(
+                viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelChanged(
                     firstFuelPrice = it.toString().toDouble(),
                     secondFuelPrice = binding.secondFuelPrice.text.toString().toDouble()
                 ))
@@ -89,7 +89,7 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
             Log.d(TAG, "secondFuelPrice.doAfterTextChanged secondFuelValue: $it")
             Log.d(TAG, "secondFuelPrice.doAfterTextChanged firstFuelValue: ${binding.firstFuelPrice.text}")
             if (binding.firstFuelPrice.text.isNotEmpty())
-                viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelTyped(
+                viewModel.dispatchViewIntent(ComparatorViewIntent.OnFuelChanged(
                     firstFuelPrice = binding.firstFuelPrice.text.toString().toDouble(),
                     secondFuelPrice = it.toString().toDouble()
                 ))

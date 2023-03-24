@@ -15,6 +15,11 @@ internal fun Fuel.toDomain(): FuelDomain {
     )
 }
 
+internal fun Array<out FuelDomain>.toData(): Array<Fuel> {
+    return this.map { it.toData() }.toTypedArray()
+}
+
+
 internal fun FuelDomain.toData(): Fuel {
     return Fuel(
         id = this.id ?: 0,
