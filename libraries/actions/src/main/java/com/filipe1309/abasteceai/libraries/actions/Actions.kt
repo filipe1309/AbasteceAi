@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 
 object Actions {
-    private const val FEATURES_PKG_NAME = "com.filipe1309.abasteceai.features"
+    private const val FEATURES_PKG_NAME = "com.filipe1309.abasteceai.ui"
     fun openComparatorIntent(context: Context) = internalIntent(context, "${FEATURES_PKG_NAME}.comparator.open")
     // fun openHistoryIntent
     // fun openFuelsIntent

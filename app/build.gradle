@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    implementation project(':features:comparator')
+    implementation project(':ui:comparator')
     implementation project(':libraries:actions')
     implementation project(':libraries:ui-components')
 

@@ -14,7 +14,12 @@ dependencyResolutionManagement {
 }
 rootProject.name = "AbasteceAi"
 include ':app'
-include ':features:comparator'
 include ':libraries:actions'
 include ':libraries:ui-components'
 include ':libraries:database'
+include ':ui:comparator'
+include ':domain:comparator'
+include ':data:fuels'
+include ':data:histories'
+include ':domain:histories'
+include ':domain:fuels'

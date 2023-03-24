@@ -13,12 +13,19 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/features" />
-            <option value="$PROJECT_DIR$/features/comparator" />
+            <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/fuels" />
+            <option value="$PROJECT_DIR$/data/histories" />
+            <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/domain/comparator" />
+            <option value="$PROJECT_DIR$/domain/fuels" />
+            <option value="$PROJECT_DIR$/domain/histories" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/actions" />
             <option value="$PROJECT_DIR$/libraries/database" />
             <option value="$PROJECT_DIR$/libraries/ui-components" />
+            <option value="$PROJECT_DIR$/ui" />
+            <option value="$PROJECT_DIR$/ui/comparator" />
           </set>
         </option>
       </GradleProjectSettings>
