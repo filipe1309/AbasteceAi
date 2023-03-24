@@ -23,10 +23,15 @@ This project was developed to help people decide which fuel to use in their vehi
 - [MVVM](https://developer.android.com/jetpack/guide)
 - [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
-
 ## :rocket: Features
 
 - [x] Compare fuel by efficiency with the current price
+- [x] Save comparison in history
+- [x] Save comparison price
+- [x] Predefined fuels
+
+## :pin: Roadmap
+
 - [ ] History of fuel comparisons
 - [ ] Register new fuel
 - [ ] News about fuels
@@ -46,13 +51,6 @@ This project was developed to help people decide which fuel to use in their vehi
 [![use case diagram image](docs/app_use_cases.png)](docs/app_use_cases.png)
 
 ### :package: Modules by feature & by layer
-
-### v1 - by feature
-
-[![modules image](docs/project.dot.png)](docs/project.dot.png)
-
-
-### v2 - by feature & by layer (current)
 
 ```mermaid
 flowchart TD
