@@ -47,7 +47,12 @@ This project was developed to help people decide which fuel to use in their vehi
 
 ### :package: Modules by feature & by layer
 
+### v1 - by feature
+
 [![modules image](docs/project.dot.png)](docs/project.dot.png)
+
+
+### v2 - by feature & by layer (current)
 
 ```mermaid
 flowchart TD
@@ -76,10 +81,6 @@ flowchart TD
     classDef domain fill:#fe8a65,color:#000
     classDef data fill:#0b99f3,color:#000
 ```
-
-TBD
-
-[//]: # ([![modules image]&#40;docs/project.dot.png&#41;]&#40;docs/project.dot.png&#41;)
 
 ### ViewIntent
 
