@@ -30,7 +30,7 @@ This project was developed to help people decide which fuel to use in their vehi
 - [x] Save comparison price
 - [x] Predefined fuels
 
-## :pin: Roadmap
+## :round_pushpin: Roadmap
 
 - [ ] History of fuel comparisons
 - [ ] Register new fuel
@@ -51,6 +51,13 @@ This project was developed to help people decide which fuel to use in their vehi
 [![use case diagram image](docs/app_use_cases.png)](docs/app_use_cases.png)
 
 ### :package: Modules by feature & by layer
+
+### v1 - by feature
+
+[![modules image](docs/project.dot.png)](docs/project.dot.png)
+
+
+### v2 - by feature & by layer (current)
 
 ```mermaid
 flowchart TD
