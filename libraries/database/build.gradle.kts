@@ -26,5 +26,5 @@ dependencies {
     implementation(Deps.gson)
 
     // Tests
-    testImplementation(Deps.junit)
+    testImplementation(Deps.test_junit)
 }

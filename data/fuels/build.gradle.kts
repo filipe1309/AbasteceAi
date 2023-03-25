@@ -15,5 +15,5 @@ dependencies {
     implementation(Deps.androidx_core)
 
     // Tests
-    testImplementation(Deps.junit)
+    testImplementation(Deps.test_junit)
 }

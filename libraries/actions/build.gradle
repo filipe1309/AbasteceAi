@@ -9,5 +9,5 @@ android {
 
 dependencies {
     implementation Deps.androidx_core
-    testImplementation Deps.junit
+    testImplementation Deps.test_junit
 }

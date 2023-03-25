@@ -42,7 +42,7 @@ dependencies {
     implementation(Deps.androidx_nav_ui)
 
     // Tests
-    testImplementation(Deps.junit)
-    androidTestImplementation(Deps.androidx_test_ext_junit)
-    androidTestImplementation(Deps.androidx_espresso_core)
+    testImplementation(Deps.test_junit)
+    androidTestImplementation(Deps.test_androidx_test_ext_junit)
+    androidTestImplementation(Deps.test_androidx_espresso_core)
 }
