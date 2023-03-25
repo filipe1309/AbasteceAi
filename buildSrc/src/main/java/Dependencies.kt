@@ -66,9 +66,9 @@ object Deps {
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
 
     // Tests
-    const val junit = "junit:junit:${Versions.junit}"
-    const val androidx_test_ext_junit = "androidx.test.ext:junit:${Versions.androidx_test_ext_junit}"
-    const val androidx_espresso_core = "androidx.test.espresso:espresso-core:${Versions.androidx_espresso_core}"
+    const val test_junit = "junit:junit:${Versions.junit}"
+    const val test_androidx_test_ext_junit = "androidx.test.ext:junit:${Versions.androidx_test_ext_junit}"
+    const val test_androidx_espresso_core = "androidx.test.espresso:espresso-core:${Versions.androidx_espresso_core}"
 }
 
 
