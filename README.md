@@ -55,27 +55,36 @@ This project was developed to help people decide which fuel to use in their vehi
 
 ```mermaid
 flowchart TD
-    APP[:app] -->|init| UI_COMPARATOR(:ui:comparator)
-    APP -->|init| UI_HISTORIES[:ui:histories*]
-    APP -->|init| UI_FUELS[:ui:fuels*]
-    APP -->|init| UI_NEWS[:ui:news*]
-    APP -->|init| UI_SETTINGS[:ui:settings*]:::ui
+    subgraph clusterUI[UI]
+        UI_ONBOARDING(:ui:onboarding):::ui
+        UI_COMPARATOR(:ui:comparator)
+        UI_HISTORIES(:ui:histories*)
+        UI_FUELS(:ui:fuels*)
+        UI_NEWS(:ui:news*)
+        UI_SETTINGS(:ui:settings*):::ui
+    end
+    
+    subgraph clusterDOMAIN[DOMAIN]
+        UI_COMPARATOR:::ui -.-> DOMAIN_COMPARATOR[:domain:comparator]:::domain
+        UI_COMPARATOR -.-> DOMAIN_FUELS[:domain:fuels]:::domain
+        UI_COMPARATOR -.-> DOMAIN_HISTORIES[fa:fa-car :domain:histories]:::domain
+        UI_FUELS:::ui -.-> DOMAIN_FUELS[:domain:fuels]
+        UI_HISTORIES:::ui -.-> DOMAIN_HISTORIES[fa:fa-car :domain:histories]
+        UI_NEWS:::ui -.-> DOMAIN_NEWS[fa:fa-car :domain:news*]:::domain
+    end
+    
+    subgraph clusterDATA[DATA]
+        DOMAIN_HISTORIES -.-> DATA_HISTORIES[fa:fa-car :data:histories]
+        DOMAIN_FUELS -.-> DATA_FUELS[fa:fa-car :data:fuels]
+    end
 
-    UI_COMPARATOR:::ui --> DOMAIN_COMPARATOR[:domain:comparator]:::domain
-    UI_COMPARATOR --> DOMAIN_FUELS[:domain:fuels]:::domain
-    UI_COMPARATOR --> DOMAIN_HISTORIES[fa:fa-car :domain:histories]:::domain
-    UI_FUELS:::ui --> DOMAIN_FUELS[:domain:fuels]
-    UI_HISTORIES:::ui --> DOMAIN_HISTORIES[fa:fa-car :domain:histories]
-    UI_NEWS:::ui --> DOMAIN_NEWS[fa:fa-car :domain:news*]:::domain
-
-    DOMAIN_HISTORIES --> DATA_HISTORIES[fa:fa-car :data:histories]
-    DOMAIN_FUELS --> DATA_FUELS[fa:fa-car :data:fuels]
-
-    DATA_HISTORIES:::data --> LIB_DATABASE[fa:fa-car :libraries:database]
-    DATA_FUELS:::data --> LIB_DATABASE[fa:fa-car :libraries:database]
-    LIB_DATABASE --> id1[(Room Database)]
-
-
+    subgraph clusterLIBS[LIBS]
+        DATA_HISTORIES:::data -.-> LIB_DATABASE[fa:fa-car :libraries:database]
+        DATA_FUELS:::data -.-> LIB_DATABASE[fa:fa-car :libraries:database]
+    end
+    
+    LIB_DATABASE -.-> id1[(Room Database)]
+    
     classDef ui fill:#00e489,color:#000
     classDef domain fill:#fe8a65,color:#000
     classDef data fill:#0b99f3,color:#000
