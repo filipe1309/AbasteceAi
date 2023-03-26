@@ -16,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -27,11 +26,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
-    private lateinit var binding: FragmentComparatorBinding
-    private val viewModel: ComparatorViewModel by viewModels {ComparatorViewModelFactory(requireContext())}
+    private val binding by lazy { FragmentComparatorBinding.inflate(layoutInflater) }
+    private val viewModel: ComparatorViewModel by viewModel()
     private lateinit var arrayAdapter: ArrayAdapter<String>
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -39,9 +39,6 @@ class ComparatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentComparatorBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         setupSpinners()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
         if (hasPermissions(requireContext(), PERMISSIONS)) {

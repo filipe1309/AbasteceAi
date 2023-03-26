@@ -29,6 +29,7 @@ object Versions {
     const val androidx_room = "2.5.0"
     const val gson = "2.8.9"
     const val play_services_location = "21.0.1"
+    const val koin_version = "3.4.0"
 }
 
 @Suppress("unused")
@@ -64,6 +65,12 @@ object Deps {
 
     // Gson
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
+
+    // Koin
+    const val koin_core = "io.insert-koin:koin-core:${Versions.koin_version}"
+    const val koin_android = "io.insert-koin:koin-android:${Versions.koin_version}"
+//    const val koin_scope = "io.insert-koin:koin-androidx-scope:${Versions.koin_version}"
+    const val koin_viewModel = "io.insert-koin:koin-androidx-viewmodel:${Versions.koin_version}"
 
     // Tests
     const val test_junit = "junit:junit:${Versions.junit}"

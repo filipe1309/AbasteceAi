@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:name=".ComparatorApp"
         android:theme="@style/Theme.AbasteceAi">
         <activity android:name="com.filipe1309.abasteceai.ui.comparator.ComparatorActivity"
             android:exported="true"

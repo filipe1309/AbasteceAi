@@ -21,11 +21,21 @@ android {
 
 dependencies {
     implementation project(':ui:comparator')
+    implementation project(':domain:comparator')
+    implementation project(':domain:histories')
+    implementation project(':domain:fuels')
+    implementation project(':data:histories')
+    implementation project(':data:fuels')
+    implementation project(':libraries:database')
     implementation project(':libraries:actions')
     implementation project(':libraries:ui-components')
 
     implementation Deps.androidx_support_lib
     implementation Deps.androidx_constraint_layout
+
+    // Koin
+    implementation Deps.koin_core
+    implementation Deps.koin_android
 
     // Tests
     testImplementation Deps.test_junit

@@ -5,6 +5,11 @@ plugins {
 
 android {
     namespace = "com.filipe1309.abasteceai.ui.comparator"
+
+    @Suppress("UnstableApiUsage")
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -14,10 +19,9 @@ dependencies {
     implementation(project(":libraries:ui-components"))
     implementation(project(":libraries:actions"))
 
-    // TODO: Remove this dependency after implementing DI
-    implementation(project(":data:fuels"))
-    implementation(project(":data:histories"))
-    implementation(project(":libraries:database"))
+    // Koin
+    implementation(Deps.koin_core)
+    implementation(Deps.koin_android)
 
     implementation(Deps.androidx_core)
     implementation(Deps.androidx_support_lib)
@@ -29,9 +33,6 @@ dependencies {
 
     // ViewModel
     implementation(Deps.androidx_viewmodel)
-
-    // LiveData
-    implementation(Deps.androidx_livedata)
 
     // Coroutines
     implementation(Deps.kotlinx_coroutines_core)
