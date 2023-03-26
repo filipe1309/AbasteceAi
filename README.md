@@ -22,6 +22,7 @@ This project was developed to help people decide which fuel to use in their vehi
 - [Clean Architecture](https://proandroiddev.com/kotlin-clean-architecture-1ad42fcd97fa)
 - [MVVM](https://developer.android.com/jetpack/guide)
 - [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- [Koin](https://insert-koin.io/)
 
 ## :rocket: Features
 
@@ -155,6 +156,9 @@ cd AbasteceAi
 - [By layer or feature? Why not both?! Guide to Android app modularization](https://www.youtube.com/watch?v=16SwTvzDO0A)
 - [MermaidJS](https://mermaid.js.org/syntax/flowchart.html)
 - [Mermaid Live Editor](https://mermaid.live/)
+- [Kotlin dependency injection: Koin vs. Hilt](https://blog.logrocket.com/kotlin-dependency-injection-koin-vs-hilt/)
+- [Koin](https://insert-koin.io/)
+- [The Ultimate Guide to Koin (Dependency Injection with Kotlin) - Android Studio Tutorial](https://www.youtube.com/watch?v=EathumJlWh8)
 
 <!-- ## :white_check_mark: Tests
 
