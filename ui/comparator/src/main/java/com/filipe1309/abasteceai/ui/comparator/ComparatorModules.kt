@@ -12,9 +12,10 @@ import org.koin.dsl.module
 
 object ComparatorModules {
     private val module = module {
+        // Presentation
         viewModel { ComparatorViewModel(get()) }
 
-        // Use cases
+        // Domain
         factory { CompareFuelsUseCase() }
         factory { GetFuelsUseCase(get()) }
         factory { SaveComparisonUseCase(get()) }

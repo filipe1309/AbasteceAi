@@ -14,8 +14,6 @@ class AppDelegate: Application() {
             androidContext(this@AppDelegate)
             modules(appModule)
             ComparatorModules.load()
-
-//            modules(appModule, *ComparatorModules.getModules().toTypedArray())
         }
     }
 }

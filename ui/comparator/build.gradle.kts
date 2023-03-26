@@ -13,11 +13,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain:comparator"))
-    implementation(project(":domain:fuels"))
-    implementation(project(":domain:histories"))
-    implementation(project(":libraries:ui-components"))
-    implementation(project(":libraries:actions"))
+    // Local Libs
+    implementation(project(LocalLibs.domain_comparator))
+    implementation(project(LocalLibs.domain_fuels))
+    implementation(project(LocalLibs.domain_histories))
+    implementation(project(LocalLibs.libraries_ui_components))
+    implementation(project(LocalLibs.libraries_actions))
 
     // Koin
     implementation(Deps.koin_core)

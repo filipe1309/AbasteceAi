@@ -20,15 +20,16 @@ android {
 }
 
 dependencies {
-    implementation project(':ui:comparator')
-    implementation project(':domain:comparator')
-    implementation project(':domain:histories')
-    implementation project(':domain:fuels')
-    implementation project(':data:histories')
-    implementation project(':data:fuels')
-    implementation project(':libraries:database')
-    implementation project(':libraries:actions')
-    implementation project(':libraries:ui-components')
+    // Local Libs
+    implementation project(LocalLibs.ui_comparator)
+    implementation project(LocalLibs.domain_comparator)
+    implementation project(LocalLibs.domain_fuels)
+    implementation project(LocalLibs.domain_histories)
+    implementation project(LocalLibs.data_histories)
+    implementation project(LocalLibs.data_fuels)
+    implementation project(LocalLibs.libraries_ui_components)
+    implementation project(LocalLibs.libraries_actions)
+    implementation project(LocalLibs.libraries_database)
 
     implementation Deps.androidx_support_lib
     implementation Deps.androidx_constraint_layout

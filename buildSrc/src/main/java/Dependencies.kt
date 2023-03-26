@@ -69,8 +69,6 @@ object Deps {
     // Koin
     const val koin_core = "io.insert-koin:koin-core:${Versions.koin_version}"
     const val koin_android = "io.insert-koin:koin-android:${Versions.koin_version}"
-//    const val koin_scope = "io.insert-koin:koin-androidx-scope:${Versions.koin_version}"
-    const val koin_viewModel = "io.insert-koin:koin-androidx-viewmodel:${Versions.koin_version}"
 
     // Tests
     const val test_junit = "junit:junit:${Versions.junit}"
