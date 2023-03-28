@@ -56,39 +56,42 @@ This project was developed to help people decide which fuel to use in their vehi
 ```mermaid
 flowchart TD
     subgraph clusterUI[UI]
-        UI_ONBOARDING(:ui:onboarding):::ui
-        UI_COMPARATOR(:ui:comparator)
-        UI_HISTORIES(:ui:histories*)
-        UI_FUELS(:ui:fuels*)
-        UI_NEWS(:ui:news*)
-        UI_SETTINGS(:ui:settings*):::ui
+        UI_ONBOARDING(fa:fa-passport :ui:onboarding):::ui
+        UI_COMPARATOR(fa:fa-code-compare :ui:comparator):::ui
+        UI_HISTORIES(fa:fa-list :ui:histories*):::ui
+        UI_FUELS(fa:fa-car :ui:fuels*):::ui
+        UI_NEWS(fa:fa-newspaper :ui:news*):::ui
+        UI_SETTINGS(fa:fa-gear :ui:settings*):::ui
     end
     
     subgraph clusterDOMAIN[DOMAIN]
-        UI_COMPARATOR:::ui -.-> DOMAIN_COMPARATOR[:domain:comparator]:::domain
-        UI_COMPARATOR -.-> DOMAIN_FUELS[:domain:fuels]:::domain
-        UI_COMPARATOR -.-> DOMAIN_HISTORIES[fa:fa-car :domain:histories]:::domain
-        UI_FUELS:::ui -.-> DOMAIN_FUELS[:domain:fuels]
-        UI_HISTORIES:::ui -.-> DOMAIN_HISTORIES[fa:fa-car :domain:histories]
-        UI_NEWS:::ui -.-> DOMAIN_NEWS[fa:fa-car :domain:news*]:::domain
+        UI_COMPARATOR -->  DOMAIN_COMPARATOR[fa:fa-code-compare :domain:comparator]:::domain
+        UI_COMPARATOR -.-> DOMAIN_FUELS[fa:fa-car :domain:fuels]:::domain
+        UI_COMPARATOR -.-> DOMAIN_HISTORIES[fa:fa-list :domain:histories]:::domain
+        UI_FUELS      -->  DOMAIN_FUELS
+        UI_HISTORIES  -->  DOMAIN_HISTORIES
+        UI_NEWS       -->  DOMAIN_NEWS[fa:fa-newspaper :domain:news*]:::domain
+        UI_SETTINGS   -->  DOMAIN_SETTINGS[fa:fa-gear :domain:settings*]:::domain
     end
     
     subgraph clusterDATA[DATA]
-        DOMAIN_HISTORIES -.-> DATA_HISTORIES[fa:fa-car :data:histories]
-        DOMAIN_FUELS -.-> DATA_FUELS[fa:fa-car :data:fuels]
+        DOMAIN_HISTORIES --> DATA_HISTORIES[fa:fa-list :data:histories]
+        DOMAIN_FUELS     --> DATA_FUELS[fa:fa-car :data:fuels]
     end
 
     subgraph clusterLIBS[LIBS]
-        DATA_HISTORIES:::data -.-> LIB_DATABASE[fa:fa-car :libraries:database]
-        DATA_FUELS:::data -.-> LIB_DATABASE[fa:fa-car :libraries:database]
+        DATA_HISTORIES:::data --> LIB_DATABASE[fa:fa-database :libraries:database]
+        DATA_FUELS:::data     --> LIB_DATABASE
     end
     
-    LIB_DATABASE -.-> id1[(Room Database)]
+    LIB_DATABASE --> id1[(fa:fa-database Room Database)]
     
     classDef ui fill:#00e489,color:#000
     classDef domain fill:#fe8a65,color:#000
     classDef data fill:#0b99f3,color:#000
 ```
+
+[//]: # (C4 Model https://mermaid.js.org/syntax/c4c.html#c4-diagrams)
 
 ### ViewIntent
 
